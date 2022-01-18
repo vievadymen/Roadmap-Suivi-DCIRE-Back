@@ -50,7 +50,7 @@ class User extends BaseUser implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user:read" ,"activite:read" ,"activite:show" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"user:read" ,"structure:show" ,"activite:read" ,"activite:show" ,"evenement:read" ,"evenement:detail"})
      */
     private $nom;
 
@@ -58,7 +58,7 @@ class User extends BaseUser implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user:read" ,"activite:read","activite:show" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"user:read" ,"structure:show" ,"activite:read","activite:show" ,"evenement:read" ,"evenement:detail"})
      * 
      */
     private $prenom;

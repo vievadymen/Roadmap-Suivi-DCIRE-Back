@@ -16,6 +16,9 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
             'groups' => [
                 1 => [
                     'activite:read',
+                    'structure:event',
+                    'structure:activite',
+                    'structure:show',
                     'structure:read',
                     'activite:show',
                     'typeService:read',

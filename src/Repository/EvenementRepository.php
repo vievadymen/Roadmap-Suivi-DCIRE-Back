@@ -36,6 +36,17 @@ class EvenementRepository extends ServiceEntityRepository
     }
     */
 
+    public function agenda($semaine)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.semaine = :semaine')
+            ->setParameter('semaine', $semaine)
+            ->getQuery()
+            ->getResult()
+            
+        ;
+    }
+
     /*
     public function findOneBySomeField($value): ?Evenement
     {

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\User;
-use Assert\NotBlank;
 use DateTimeInterface;
 use App\Entity\Evenement;
 use App\Entity\Structure;
@@ -16,7 +15,7 @@ use App\Repository\ActiviteRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -31,13 +30,13 @@ class Activite
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"difficulte:read ,pointDeCoordination:read"})
-     * @Groups({"activite:read"})
+     * @Groups({"activite:read" })
      */
     protected $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"activite:read", "activite:show"})
+     * @Groups({"activite:read","structure:activite", "activite:show"})
      */
     protected $libelle;
 
@@ -60,6 +59,7 @@ class Activite
 
     /**
      * @ORM\OneToMany(targetEntity=Difficulte::class, mappedBy="activite")
+     * @Groups({"structure:active"})
      */
     private $difficulte;
 
@@ -83,6 +83,7 @@ class Activite
      * @ORM\Column(type="date")
      *  @var string A "Y-m-d" formatted value
      * @Groups({"activite:read"})
+     * @Notblank
      */
     private $date;
 

@@ -628,6 +628,7 @@
     <service id="App\Controller\EvenementController" class="App\Controller\EvenementController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <argument type="service" id="App\Repository\ActiviteRepository"/>
+      <argument type="service" id="App\Service\BaseService"/>
       <argument type="service" id="App\Repository\UserRepository"/>
       <argument type="service" id="App\Repository\EvenementRepository"/>
       <argument type="service" id="App\Repository\PeriodiciteRepository"/>

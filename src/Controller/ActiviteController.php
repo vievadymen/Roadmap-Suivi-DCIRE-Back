@@ -58,7 +58,7 @@ class ActiviteController extends BaseController
 
     }
     /**
-     * @Post("/activite", name="activites")
+     * @Post("/api/activite", name="activites")
      */
     public function addActivite(Request $request ,ValidatorInterface $validator ,SerializerInterface $serializer): Response
     {
@@ -96,7 +96,7 @@ class ActiviteController extends BaseController
     }
 
     /**
-     * @Get("/activite", name="activite")
+     * @Get("/api/activite", name="activite")
      */
     public function listActivite(): Response
     {
@@ -105,7 +105,7 @@ class ActiviteController extends BaseController
          return $this->json($activites, 200, [], ['groups' => 'activite:read']);
     }
       /**
-     * @Get("/activite/{id}")
+     * @Get("/api/activite/{id}")
      * @QMLogger(message="Details activite")
      */
     public function detailsactivite($id){
@@ -119,7 +119,7 @@ class ActiviteController extends BaseController
     }
     
     /**
-     * @Get("/rechercheactivite")
+     * @Get("/api/rechercheactivite")
      * @QMLogger(message="Recherche activite")
      */
     public function rechercherActivite(Request $request){
@@ -130,7 +130,7 @@ class ActiviteController extends BaseController
     }
 
     /**
-    * @Delete("/activite/{id}", name="delete_activite")
+    * @Delete("/api/activite/{id}", name="delete_activite")
     */
     public function deleteactivite(int $id): Response
     {
@@ -161,11 +161,28 @@ class ActiviteController extends BaseController
             }
         }
         dd($data);*/
-        return $this->json($activites, 200, [], ['groups' => 'activite:show']);
+        return $this->json($activites, 200, [], ['groups' => 'activite:read']);
     }
+
+
+    /**
+     * @Get("/api/activite/semaine/{semaine}", name="precedent-activite")
+     */
+    public function PrecedeActivite($semaine): Response
+    {
+       //recupere annee courante
+       $year = date("Y");
+       $activites=$this->activiteRepo->precede($semaine, $year);
+       // recupere l'utilisateur via le token,
+       $user = $this->getUser()->getId();
+       //recuper les activité ayant comme semaine  $semaine_passer, et comme utilisateur l'utilisateur connecter
+       
+       return $this->json($activites, 200, [], ['groups' => 'activite:show']);
+    }
+
    
     // /**
-    //  * @Put("/activite/{id}")
+    //  * @Put("/api/activite/{id}")
     //  * @QMLogger(message="modifier activite")
     //  */
     // public function modifiActivite($id, Activite $activite, Request $request):Response
@@ -190,7 +207,7 @@ class ActiviteController extends BaseController
     // }
     
    /**
-     * @Put("/activite/{id}")
+     * @Put("/api/activite/{id}")
      * @QMLogger(message="modifier activite")
      */
     public function modifiActivite($id, Activite $activite, Request $request):Response

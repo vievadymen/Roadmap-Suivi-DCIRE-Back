@@ -15,6 +15,7 @@ use App\Repository\EvenementRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -35,7 +36,7 @@ class Evenement
 
     /**
      * @ORM\Column(type="text" )
-     * @Groups({"evenement:read" ,"evenement:detail" ,"autorite:read"})
+     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
      * 
      */
     private $thematique;
@@ -74,7 +75,7 @@ class Evenement
 
     /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="evenements")
-     * @Groups({"evenement:read" ,"evenement:detail"})
+     * @Groups({"evenement:read" ,"structure:show" ,"evenement:detail"})
      */
     private $user;
 
@@ -90,21 +91,28 @@ class Evenement
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"commentaire:read" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"commentaire:read","structure:event" ,"evenement:read" ,"evenement:detail"})
+     * @Notblank
      */
     private $start;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"commentaire:read" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"commentaire:read" ,"structure:event" ,"evenement:read" ,"evenement:detail"})
      */
     private $end;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"commentaire:read" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"commentaire:read" ,"structure:event" ,"evenement:read" ,"evenement:detail"})
      */
     private $confirmation;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"evenement:read" ,"evenement:detail"})
+     */
+    private $semaine;
 
     public function __construct()
     {
@@ -340,6 +348,18 @@ class Evenement
     public function setConfirmation(?bool $confirmation): self
     {
         $this->confirmation = $confirmation;
+
+        return $this;
+    }
+
+    public function getSemaine(): ?int
+    {
+        return $this->semaine;
+    }
+
+    public function setSemaine(?int $semaine): self
+    {
+        $this->semaine = $semaine;
 
         return $this;
     }

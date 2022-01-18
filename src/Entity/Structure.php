@@ -22,13 +22,15 @@ class Structure
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"activite:read" ,"structure:activite", "structure:show" ,"structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
+
      * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"activite:read", "structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
+     * @Groups({"activite:read","structure:event" ,"structure:activite", "structure:show" ,"structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
      */
     private $libelle;
 
@@ -44,11 +46,14 @@ class Structure
 
     /**
      * @ORM\OneToMany(targetEntity=activite::class, mappedBy="structure")
+     * @Groups({"structure:activite"})
      */
     private $activite;
 
     /**
      * @ORM\OneToMany(targetEntity=evenement::class, mappedBy="structure")
+     * @Groups({"structure:show" ,"structure:event" })
+     * 
      */
     private $evenement;
 

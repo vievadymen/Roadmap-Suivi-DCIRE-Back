@@ -128,7 +128,7 @@ public function __construct(UserRepository $userRepository,UserManager $userMana
     }
 
     /**
-     * @Rest\Get("/user")
+     * @Rest\Get("/api/users")
      * @QMLogger(message="Liste utilisateurs")
      */
     public function listUsers(Request $request){

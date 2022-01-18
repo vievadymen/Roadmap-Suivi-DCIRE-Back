@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\HistoriqueEvenementRepository;
+use App\Service\BaseService;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -43,8 +44,9 @@ class EvenementController extends BaseController
     private PeriodiciteRepository $periodiciterepo;
     private TrancheHoraireRepository $trancheHoraireRepo;
     private HistoriqueEvenementRepository $historiqueEvenementRepo;
+    private BaseService $baseService;
 
-    public function __construct(ActiviteRepository $activiteRepo ,UserRepository $userRepo ,EvenementRepository $evenementRepo,
+    public function __construct(ActiviteRepository $activiteRepo ,BaseService $baseService,UserRepository $userRepo ,EvenementRepository $evenementRepo,
                 periodiciteRepository $periodiciteRepo,StructureRepository $structureRepo ,TrancheHoraireRepository $trancheHoraireRepo ,HistoriqueEvenementRepository $historiqueEvenementRepo)
     {
         $this->activiteRepo = $activiteRepo;
@@ -53,11 +55,12 @@ class EvenementController extends BaseController
         $this->periodiciteRepo = $periodiciteRepo;
         $this->structureRepo = $structureRepo;
         $this->historiqueEvenementRepo = $historiqueEvenementRepo;
+        $this->baseService=$baseService;
 
     }
     
     /**
-     * @Post("/evenement", name="evenements")
+     * @Post("/api/evenement", name="evenements")
      */
     public function addEvenement(Request $request ,ValidatorInterface $validator ,SerializerInterface $serializer): Response
     {
@@ -83,6 +86,12 @@ class EvenementController extends BaseController
         $entityManager->flush();
      */
     $user = $this->getUser();
+    $structure= $user->getStructure();
+    $start = ($request->request->get('start'));
+    $evenement->setThematique($request->request->get('thematique'));
+    $semaine= $this->baseService->Date2Semaine($start);
+    $evenement->setSemaine($semaine);
+    $evenement->setStructure($structure);
    // $structure= $this->structureRepo->find($request->get('structure'));
         $evenement->setUser($user);
        // $evenement->setStructure($structure);
@@ -95,7 +104,7 @@ class EvenementController extends BaseController
     }
 
     /**
-     * @Get("/evenement", name="evenement")
+     * @Get("/api/evenement", name="evenement")
      */
     public function listEvenement(): Response
     {
@@ -106,7 +115,7 @@ class EvenementController extends BaseController
         return $response; 
     }
       /**
-     * @Get("/evenement/{id}")
+     * @Get("/api/evenement/{id}")
      * @QMLogger(message="Details evenement")
      */
     public function detailsEvenement($id){
@@ -121,7 +130,7 @@ class EvenementController extends BaseController
     }
     
     /**
-     * @Get("/rechercheevenement")
+     * @Get("/api/rechercheevenement")
      * @QMLogger(message="Recherche evenement")
      */
     public function recherchErevenement(Request $request){
@@ -132,7 +141,7 @@ class EvenementController extends BaseController
     }
 
     /**
-    * @Delete("/evenement/{id}", name="delete_evenement")
+    * @Delete("/api/evenement/{id}", name="delete_evenement")
     */
     public function deleteEvenement(int $id): Response
     {
@@ -144,27 +153,42 @@ class EvenementController extends BaseController
         return $this->json(['status'=>200, "message"=>"événement effacé avec succes"]);  
     }
  /**
-     * @Put("/evenement/{id}")
+     * @Put("/api/evenement/{id}")
      * @QMLogger(message="modifier evenement")
      */
     public function modifiEvenement($id, Evenement $evenement, Request $request)
     {
         $evenement = $this->evenementRepo->find($id);
         $user = $this->getUser();
-      //  $user= $this->getStructure();
     $structure= $user->getStructure();
-    $date_evenement = ($request->request->get('date'));
-        $evenement->setThematique($request->request->get('thematique'));
+    $start = ($request->request->get('start'));
+    $evenement->setThematique($request->request->get('thematique'));
+    $semaine= $this->baseService->Date2Semaine($start);
+    $evenement->setSemaine($semaine);
+    $evenement->setStructure($structure);
+   // $structure= $this->structureRepo->find($request->get('structure'));
         $evenement->setUser($user);
-        $evenement->setStructure($structure);
+       // $evenement->setStructure($structure);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($evenement);
-        
         $entityManager->flush();
 
         return $this->json(['status'=>200, "message"=>"Evenement modifie avec succes"]);
 
 }
+
+
+    /**
+     * @Get("/api/agenda/evenement", name="agenda-evenement")
+     */
+    public function AgendaEvenement(): Response
+    {
+        #$evenementJson=file_get_contents("https://server/reportserver/ReportService2010.asmx?wsdl");
+        $semaine= strftime("%W");
+        $year = date("Y");
+        $evenements = $this->evenementRepo->agenda($semaine, $year);
+        return $this->json($evenements, 200, [], ['groups' => 'evenement:detail']);
+    }
 
 }

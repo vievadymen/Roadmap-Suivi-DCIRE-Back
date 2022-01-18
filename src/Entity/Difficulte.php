@@ -6,6 +6,7 @@ use App\Entity\Activite;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DifficulteRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -26,7 +27,8 @@ class Difficulte
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"difficulte:read"})
+     * @Groups({"structure:active", "difficulte:read"})
+     * @Notblank
      */
     private $description;
 

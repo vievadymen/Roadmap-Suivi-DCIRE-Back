@@ -19,6 +19,18 @@ class ActiviteRepository extends ServiceEntityRepository
         parent::__construct($registry, Activite::class);
     }
 
+    public function precede($semaine)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.semaine = :semaine')
+            ->setParameter('semaine', $semaine)
+            ->getQuery()
+            ->getResult()
+            
+        ;
+    }
+
+
     // /**
     //  * @return Activite[] Returns an array of Activite objects
     //  */

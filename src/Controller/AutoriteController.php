@@ -38,7 +38,7 @@ class AutoriteController extends BaseController
     }
     
     /**
-     * @Post("/autorite", name="autorites")
+     * @Post("/api/autorite", name="autorites")
      */
     public function addAutorite(Request $request ,ValidatorInterface $validator ,SerializerInterface $serializer): Response
     {
@@ -84,7 +84,7 @@ class AutoriteController extends BaseController
         return $response; 
     }
       /**
-     * @Get("/autorite/{id}")
+     * @Get("/api/autorite/{id}")
      * @QMLogger(message="Details autorite")
      */
     public function detailsAutorite($id){
@@ -107,7 +107,7 @@ class AutoriteController extends BaseController
     }
 
     /**
-    * @Delete("/autorite/{id}", name="delete_autorite")
+    * @Delete("/api/autorite/{id}", name="delete_autorite")
     */
     public function deleteAutorite(int $id): Response
     {
@@ -119,7 +119,7 @@ class AutoriteController extends BaseController
     return $this->redirectToRoute("autorites");
     }
     /**
-     * @Put("/autorite/{id}")
+     * @Put("/api/autorite/{id}")
      * @QMLogger(message="modifier autorite")
      */
     public function modifiAutorite(Request $request ,SerializerInterface $serializer, $id, $autoriteManager){

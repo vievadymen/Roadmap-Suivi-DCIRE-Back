@@ -37,7 +37,7 @@ class DifficulteController extends BaseController
         $user= new User;
     }
     /**
-     * @Post("/difficulte", name="difficultes")
+     * @Post("/api/difficulte", name="difficultes")
      */
     public function addDifficulte(Request $request ,ValidatorInterface $validator ,SerializerInterface $serializer): Response
     {
@@ -71,7 +71,7 @@ class DifficulteController extends BaseController
     }
 
     /**
-     * @Get("/difficulte", name="difficulte")
+     * @Get("/api/difficulte", name="difficulte")
      */
     public function listDifficulte(): Response
     {
@@ -82,7 +82,7 @@ class DifficulteController extends BaseController
         return $response; 
     }
       /**
-     * @Get("/difficulte/{id}")
+     * @Get("/api/difficulte/{id}")
      * @QMLogger(message="Details difficulte")
      */
     public function detailsDifficulte($id){
@@ -95,7 +95,7 @@ class DifficulteController extends BaseController
     }
 
     /**
-    * @Delete("/difficulte/{id}", name="delete_difficulte")
+    * @Delete("/api/difficulte/{id}", name="delete_difficulte")
     */
     public function deleteDifficulte(int $id): Response
     {
@@ -107,7 +107,7 @@ class DifficulteController extends BaseController
         return $this->json(['status'=>200, "message"=>"difficulte efface avec succes"]);  
     }
     /**
-     * @Put("/difficulte/{id}")
+     * @Put("/api/difficulte/{id}")
      * @QMLogger(message="modifier difficulte")
      */
     public function modifiDifficulte($id, Request $request){

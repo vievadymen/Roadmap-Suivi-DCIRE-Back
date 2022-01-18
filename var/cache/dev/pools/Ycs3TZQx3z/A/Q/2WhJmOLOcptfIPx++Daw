@@ -8,7 +8,7 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
     [
         'Symfony\\Component\\Routing\\Annotation\\Route' => [
             'path' => [
-                '/delete-structure/{id}',
+                '/api/delete-structure/{id}',
             ],
             'name' => [
                 'delete_structure',

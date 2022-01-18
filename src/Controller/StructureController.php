@@ -31,7 +31,7 @@ class StructureController extends BaseController
         $user= new User;
     }
     /**
-     * @Post("api/structure", name="structures")
+     * @Post("/api/structure", name="structures")
      * 
      */
     public function addStructure(Request $request ,ValidatorInterface $validator ,SerializerInterface $serializer): Response
@@ -59,7 +59,7 @@ class StructureController extends BaseController
        
     }
 
-    /**
+   /**
      * @Get("/api/structure", name="structure")
      */
     public function listStructure(): Response
@@ -67,20 +67,43 @@ class StructureController extends BaseController
        
          $structures = $this->structureRepo->findAll();
          
-        return $this->json($structures,  200, [], ['groups' => 'structure:read']);
+         return  $this->json($structures, 200, [], ['groups' => 'structure:read']);
+    }
 
+   /**
+     * @Get("/api/structure", name="structure")
+     */
+    public function EventStructure(): Response
+    {
+       
+         $structures = $this->structureRepo->findAll();
+         
+         return  $this->json($structures, 200, [], ['groups' => 'structure:read']);
     }
       /**
-     * @Get("/structure/{id}")
+     * @Get("/api/structure/{id}")
      * @QMLogger(message="Details structure")
      */
-    public function detailsStructure($id){
+    public function detailsStructure($id)
+    {
         $structures = $this->structureRepo->find($id);
-        return $this->json($structures);
+        return  $this->json($structures, 200, [], ['groups' => 'structure:show']);
+
+    }
+     /**
+     * @Get("/api/structure-activite/{id}")
+     * @QMLogger(message="Details structure")
+     */
+    public function structureActivite($id)
+    {
+        $structures = $this->structureRepo->find($id);
+        return  $this->json($structures, 200, [], ['groups' => 'structure:activite']);
+
     }
 
+    
     /**
-    * @Delete("/delete-structure/{id}", name="delete_structure")
+    * @Delete("/api/delete-structure/{id}", name="delete_structure")
     */
     public function deleteStructure(int $id): Response
     {
@@ -91,15 +114,19 @@ class StructureController extends BaseController
 
     return $this->redirectToRoute("structures");
     }
-     /**
-     * @Put("/structure/{id}")
+
+      /**
+     * @Put("/api/structure/{id}")
      * @QMLogger(message="modifier structure")
      */
-    public function modifiStructure($id){
+    public function modifiStructure($id, Request $request){
         $structure = $this->structureRepo->find($id);
-        $structure = $serializer->deserialize($request->getContent(), structure::class,'json');
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($structure);
+            $entityManager->flush();
 
-        return new JsonResponse($this->structureManager->modifistructure($id));
+            return $this->json(['status'=>200, "message"=>"structure modifie avec succes"]);
+
     }
 }
 
