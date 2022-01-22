@@ -598,6 +598,7 @@
     <service id="App\Controller\ActiviteController" class="App\Controller\ActiviteController" public="true" autowire="true" autoconfigure="true">
       <tag name="controller.service_arguments"/>
       <argument type="service" id="App\Repository\ActiviteRepository"/>
+      <argument type="service" id="App\Service\BaseService"/>
       <argument type="service" id="App\Repository\UserRepository"/>
       <argument type="service" id="App\Repository\StructureRepository"/>
       <argument type="service" id="App\Repository\TrancheHoraireRepository"/>
@@ -631,7 +632,7 @@
       <argument type="service" id="App\Service\BaseService"/>
       <argument type="service" id="App\Repository\UserRepository"/>
       <argument type="service" id="App\Repository\EvenementRepository"/>
-      <argument type="service" id="App\Repository\PeriodiciteRepository"/>
+      <argument type="service" id="App\Repository\AutoriteRepository"/>
       <argument type="service" id="App\Repository\StructureRepository"/>
       <argument type="service" id="App\Repository\TrancheHoraireRepository"/>
       <argument type="service" id="App\Repository\HistoriqueEvenementRepository"/>

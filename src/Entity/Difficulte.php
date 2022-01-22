@@ -11,9 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=DifficulteRepository::class)
- * @UniqueEntity( 
- *     fields={"description"},
- *     message="La description doit être unique")
+ * 
  */
 class Difficulte
 {
@@ -38,6 +36,11 @@ class Difficulte
      * @Groups({"difficulte:read"})
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $semaine;
 
 
 
@@ -71,6 +74,18 @@ class Difficulte
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getSemaine(): ?int
+    {
+        return $this->semaine;
+    }
+
+    public function setSemaine(int $semaine): self
+    {
+        $this->semaine = $semaine;
 
         return $this;
     }

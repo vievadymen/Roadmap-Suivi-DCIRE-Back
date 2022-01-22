@@ -66,10 +66,10 @@ class Structure extends \App\Entity\Structure implements \Doctrine\ORM\Proxy\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users'];
+            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'color'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users'];
+        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'color'];
     }
 
     /**
@@ -387,6 +387,28 @@ class Structure extends \App\Entity\Structure implements \Doctrine\ORM\Proxy\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeUser', [$user]);
 
         return parent::removeUser($user);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getColor(): ?string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getColor', []);
+
+        return parent::getColor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setColor(?string $color): \App\Entity\Structure
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setColor', [$color]);
+
+        return parent::setColor($color);
     }
 
 }

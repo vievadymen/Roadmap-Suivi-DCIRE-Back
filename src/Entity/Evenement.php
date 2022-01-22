@@ -20,9 +20,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=EvenementRepository::class)
- * @UniqueEntity( 
- *     fields={"thematique"},
- *     message="Le thématique doit être unique")
  */
 class Evenement
 {
@@ -68,12 +65,6 @@ class Evenement
    
 
     /**
-     * @ORM\OneToMany(targetEntity=TrancheHoraire::class, mappedBy="evenement" ,cascade={"persist"})
-     * 
-     */
-    private $trancheHoraires;
-
-    /**
      * @ORM\ManyToOne(targetEntity=user::class, inversedBy="evenements")
      * @Groups({"evenement:read" ,"structure:show" ,"evenement:detail"})
      */
@@ -84,35 +75,45 @@ class Evenement
      */
     private $activite;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Autorite::class, mappedBy="evenement")
-     */
-    private $autorites;
-
+ 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"commentaire:read","structure:event" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
      * @Notblank
      */
     private $start;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"commentaire:read" ,"structure:event" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
      */
     private $end;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"commentaire:read" ,"structure:event" ,"evenement:read" ,"evenement:detail"})
-     */
-    private $confirmation;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"evenement:read" ,"evenement:detail"})
      */
     private $semaine;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"commentaire:read" ,"structure:event" ,"evenement:read" ,"evenement:detail"})
+     */
+    private $confirmation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail"})
+
+     */
+    private $autorite;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail"})
+     */
+    private $lieu;
 
     public function __construct()
     {
@@ -218,37 +219,7 @@ class Evenement
         return $this;
     }
 
-   
-
-    /**
-     * @return Collection|TrancheHoraire[]
-     */
-    public function getTrancheHoraires(): Collection
-    {
-        return $this->trancheHoraires;
-    }
-
-    public function addTrancheHoraire(TrancheHoraire $trancheHoraire): self
-    {
-        if (!$this->trancheHoraires->contains($trancheHoraire)) {
-            $this->trancheHoraires[] = $trancheHoraire;
-            $trancheHoraire->setEvenement($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrancheHoraire(TrancheHoraire $trancheHoraire): self
-    {
-        if ($this->trancheHoraires->removeElement($trancheHoraire)) {
-            // set the owning side to null (unless already changed)
-            if ($trancheHoraire->getEvenement() === $this) {
-                $trancheHoraire->setEvenement(null);
-            }
-        }
-
-        return $this;
-    }
+  
 
     public function getUser(): ?user
     {
@@ -286,36 +257,6 @@ class Evenement
         return $this;
     }
 
-    /**
-     * @return Collection|Autorite[]
-     */
-    public function getAutorites(): Collection
-    {
-        return $this->autorites;
-    }
-
-    public function addAutorite(Autorite $autorite): self
-    {
-        if (!$this->autorites->contains($autorite)) {
-            $this->autorites[] = $autorite;
-            $autorite->setEvenement($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAutorite(Autorite $autorite): self
-    {
-        if ($this->autorites->removeElement($autorite)) {
-            // set the owning side to null (unless already changed)
-            if ($autorite->getEvenement() === $this) {
-                $autorite->setEvenement(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getStart(): ?\DateTimeInterface
     {
         return $this->start;
@@ -340,18 +281,6 @@ class Evenement
         return $this;
     }
 
-    public function getConfirmation(): ?bool
-    {
-        return $this->confirmation;
-    }
-
-    public function setConfirmation(?bool $confirmation): self
-    {
-        $this->confirmation = $confirmation;
-
-        return $this;
-    }
-
     public function getSemaine(): ?int
     {
         return $this->semaine;
@@ -360,6 +289,42 @@ class Evenement
     public function setSemaine(?int $semaine): self
     {
         $this->semaine = $semaine;
+
+        return $this;
+    }
+
+    public function getConfirmation(): ?string
+    {
+        return $this->confirmation;
+    }
+
+    public function setConfirmation(?string $confirmation): self
+    {
+        $this->confirmation = $confirmation;
+
+        return $this;
+    }
+
+    public function getAutorite(): ?string
+    {
+        return $this->autorite;
+    }
+
+    public function setAutorite(?string $autorite): self
+    {
+        $this->autorite = $autorite;
+
+        return $this;
+    }
+
+    public function getLieu(): ?string
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?string $lieu): self
+    {
+        $this->lieu = $lieu;
 
         return $this;
     }

@@ -35,6 +35,16 @@ class DifficulteRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function precede($semaine)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.semaine = :semaine')
+            ->setParameter('semaine', $semaine)
+            ->getQuery()
+            ->getResult()
+            
+        ;
+    }
 
     /*
     public function findOneBySomeField($value): ?Difficulte

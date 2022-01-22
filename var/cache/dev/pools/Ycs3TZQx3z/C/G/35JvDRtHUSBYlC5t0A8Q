@@ -24,10 +24,11 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
         'Symfony\\Component\\Serializer\\Annotation\\Groups' => [
             'groups' => [
                 1 => [
-                    'commentaire:read',
-                    'structure:event',
                     'evenement:read',
+                    'structure:event',
+                    'structure:show',
                     'evenement:detail',
+                    'autorite:read',
                 ],
             ],
         ],

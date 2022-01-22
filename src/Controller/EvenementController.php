@@ -12,11 +12,13 @@ use App\Entity\Structure;
 use App\Entity\Commentaire;
 use App\Entity\Periodicite;
 use App\Annotation\QMLogger;
+use App\Service\BaseService;
 use FOS\UserBundle\Mailer\Mailer;
 use App\Controller\BaseController;
 use App\Repository\UserRepository;
 use App\Entity\HistoriqueEvenement;
 use App\Repository\ActiviteRepository;
+use App\Repository\AutoriteRepository;
 use App\Repository\EvenementRepository;
 use App\Repository\StructureRepository;
 use App\Repository\PeriodiciteRepository;
@@ -28,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\HistoriqueEvenementRepository;
-use App\Service\BaseService;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -41,18 +42,18 @@ class EvenementController extends BaseController
     private UserRepository $userRepo;
     private EvenementRepository $evenementRepo;
     private StructureRepository $structureRepo;
-    private PeriodiciteRepository $periodiciterepo;
+    private AutoriteRepository $autoriterepo;
     private TrancheHoraireRepository $trancheHoraireRepo;
     private HistoriqueEvenementRepository $historiqueEvenementRepo;
     private BaseService $baseService;
 
     public function __construct(ActiviteRepository $activiteRepo ,BaseService $baseService,UserRepository $userRepo ,EvenementRepository $evenementRepo,
-                periodiciteRepository $periodiciteRepo,StructureRepository $structureRepo ,TrancheHoraireRepository $trancheHoraireRepo ,HistoriqueEvenementRepository $historiqueEvenementRepo)
+                AutoriteRepository $autoriteRepo,StructureRepository $structureRepo ,TrancheHoraireRepository $trancheHoraireRepo ,HistoriqueEvenementRepository $historiqueEvenementRepo)
     {
         $this->activiteRepo = $activiteRepo;
         $this->userRepo = $userRepo;
         $this->evenementRepo = $evenementRepo;
-        $this->periodiciteRepo = $periodiciteRepo;
+        $this->autoriteRepo = $autoriteRepo;
         $this->structureRepo = $structureRepo;
         $this->historiqueEvenementRepo = $historiqueEvenementRepo;
         $this->baseService=$baseService;
@@ -88,7 +89,13 @@ class EvenementController extends BaseController
     $user = $this->getUser();
     $structure= $user->getStructure();
     $start = ($request->request->get('start'));
+    $end = ($request->request->get('end'));
+    //$autorite=$this->autoriteRepo->find($request->get('autorite'));
+    //$evenement->setAutorite($autorite);
     $evenement->setThematique($request->request->get('thematique'));
+    $evenement->setAutorite($request->request->get('autorite'));
+    $evenement->setStart(new \DateTime($start));
+    $evenement->setEnd(new \DateTime($end));
     $semaine= $this->baseService->Date2Semaine($start);
     $evenement->setSemaine($semaine);
     $evenement->setStructure($structure);
@@ -120,13 +127,7 @@ class EvenementController extends BaseController
      */
     public function detailsEvenement($id){
         $evenements = $this->evenementRepo->find($id);
-        //dd($evenements);
-        $data['thematique'] =$evenements->getThematique();
-        $data["start"]= $evenements->getStart()->format("Y-m-d");
-        //$data["end"]= $evenements->getEnd()->format("Y-m-d");
-        //$data["start"]= $evenements->getStart()?$evenements->getStart()->format("Y-m-d"): null;
-        $data["end"]= $evenements->getEnd()?$evenements->getEnd()->format("Y-m-d"): null;
-       return $this->json($data, 200, [], ['groups' => 'evenement:detail']);
+       return $this->json($evenements, 200, [], ['groups' => 'evenement:detail']);
     }
     
     /**
@@ -179,16 +180,31 @@ class EvenementController extends BaseController
 }
 
 
-    /**
-     * @Get("/api/agenda/evenement", name="agenda-evenement")
+    // /**
+    //  * @Get("/api/agenda/evenement/{semaine}", name="agenda-evenement")
+    //  */
+    // public function AgendaEvenement(): Response
+    // {
+    //     #$evenementJson=file_get_contents("https://server/reportserver/ReportService2010.asmx?wsdl");
+    //     $semaine= strftime("%W");
+    //     $year = date("Y");
+    //     $evenements = $this->evenementRepo->agenda($semaine, $year);
+    //     return $this->json($evenements, 200, [], ['groups' => 'evenement:detail']);
+    // }
+
+/**
+     * @Get("/api/agenda/evenement/{semaine}", name="agenda-evenement")
      */
-    public function AgendaEvenement(): Response
+    public function AgendaEvenement ($semaine)
     {
-        #$evenementJson=file_get_contents("https://server/reportserver/ReportService2010.asmx?wsdl");
-        $semaine= strftime("%W");
-        $year = date("Y");
-        $evenements = $this->evenementRepo->agenda($semaine, $year);
-        return $this->json($evenements, 200, [], ['groups' => 'evenement:detail']);
-    }
+   
+    // recupere l'utilisateur via le token,
+    $user = $this->getUser()->getId();
+    //recuper les activité ayant comme semaine  $semaine_passer, et comme utilisateur l'utilisateur connecter
+    $event = $this->evenementRepo->findBy(["semaine"=>$semaine]);
+    return $this->json($event, 200, [], ['groups' => 'evenement:detail']);
+}
 
 }
+
+    

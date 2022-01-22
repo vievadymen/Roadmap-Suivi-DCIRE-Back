@@ -39,9 +39,12 @@ class BaseService
                 'text/html');
         $this->mailer->send($message);
     }
-    public function Date2Semaine($date){
-        $am = explode('-', $date);
-        return date("W", mktime(0,0,0,$am[1],$am[0],$am[2]));
+    
+    public function Date2Semaine($date)
+    {
+        $date_test = $date;
+        $good_format=strtotime ($date_test);
+        return date('W',$good_format);
     }
 
     public function uploadFile($file,$directory){

@@ -121,6 +121,8 @@ class StructureController extends BaseController
      */
     public function modifiStructure($id, Request $request){
         $structure = $this->structureRepo->find($id);
+        $structure->setlibelle($request->request->get('libelle'));
+        $structure->setcolor($request->request->get('color'));
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($structure);
             $entityManager->flush();

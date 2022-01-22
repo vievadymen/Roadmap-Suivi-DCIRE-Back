@@ -67,6 +67,13 @@ class Structure
      */
     private $users;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"activite:read","structure:event" ,"structure:activite", "structure:show" ,"structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
+
+     */
+    private $color;
+
  
 
     public function __construct()
@@ -235,6 +242,18 @@ class Structure
                 $user->setStructure(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
 
         return $this;
     }

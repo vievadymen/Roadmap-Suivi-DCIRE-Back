@@ -110,7 +110,7 @@ public function __construct(UserRepository $userRepository,UserManager $userMana
 
 
     /**
-     * @Rest\Post("/user")
+     * @Rest\Post("/api/users")
      * @QMLogger(message="Ajout utilisateur")
      */
     public function addUser(Request $request){

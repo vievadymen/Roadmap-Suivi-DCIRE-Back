@@ -14,6 +14,7 @@ use App\Entity\Structure;
 use App\Entity\Difficulte;
 use App\Entity\Periodicite;
 use App\Annotation\QMLogger;
+use App\Service\BaseService;
 use App\Entity\TrancheHoraire;
 use FOS\UserBundle\Mailer\Mailer;
 use App\Controller\BaseController;
@@ -21,8 +22,8 @@ use App\Repository\UserRepository;
 use App\Entity\PointDeCoordination;
 use App\Repository\ActiviteRepository;
 use App\Repository\StructureRepository;
-use App\Repository\TrancheHoraireRepository;
 use App\Repository\TypeServiceRepository;
+use App\Repository\TrancheHoraireRepository;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,8 +45,9 @@ class ActiviteController extends BaseController
     private StructureRepository $structurerepo;
     private TrancheHoraireRepository $trancheHoraireRepo;
     private SerializerInterface $serializer;
+    private BaseService $baseService;
 
-    public function __construct(ActiviteRepository $activiteRepo ,UserRepository $userRepo ,
+    public function __construct(ActiviteRepository $activiteRepo  ,BaseService $baseService,UserRepository $userRepo ,
                 StructureRepository $structureRepo ,TrancheHoraireRepository $trancheHoraireRepo,TypeServiceRepository $serviceRepository)
     {
         $this->activiteRepo = $activiteRepo;
@@ -54,6 +56,8 @@ class ActiviteController extends BaseController
         $this->trancheHoraireRepo = $trancheHoraireRepo;
         $this->serializer = new Serializer();
         $this->serviceRepository= $serviceRepository;
+        $this->baseService=$baseService;
+
 
 
     }
@@ -74,9 +78,13 @@ class ActiviteController extends BaseController
    // $user= $this->userRepo->find($request->get('user'));
     $user = $this->getUser();
     $structure= $user->getStructure();
+    $date= ($request->request->get('date'));
+    $activite->setLibelle($request->request->get('libelle'));
+    $activite->setDate(new \DateTime($date));
+    $semaine= $this->baseService->Date2Semaine($date);
+    $activite->setSemaine($semaine);
         $activite->setUser($user);
         $activite->setStructure($structure);
-        $activite->setSemaine((int) strftime("%W"));
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($activite);
