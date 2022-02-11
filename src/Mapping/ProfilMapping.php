@@ -16,9 +16,7 @@ class ProfilMapping extends BaseMapping
     }
     private function setProfilData($data,$profil){
         $libelle = isset($data['libelle']) ? $data['libelle'] : $profil->getLibelle();
-        $desc = isset($data['code']) ? $data['code'] : $profil->getCode();
         $profil->setLibelle($libelle);
-        $profil->setCode($desc);
         return $profil;
     }
     public function updateProfil($data,$profil){
@@ -28,7 +26,6 @@ class ProfilMapping extends BaseMapping
         return array(
             $this->ID_KEY=>$profil?$profil->getId():null,
             $this->LIBELLE_KEY=>$profil?$profil->getLibelle():null,
-            "code"=>$profil?$profil->getCode():null
         );
     }
     public function allProfil($datas){

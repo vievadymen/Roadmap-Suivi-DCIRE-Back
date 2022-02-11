@@ -4,6 +4,7 @@ namespace App\Entity;
 use App\Entity\Profil;
 use App\Entity\Workflow;
 use App\Entity\Structure;
+use App\Entity\Difficulte;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Ldap\Ldap;
 use FOS\UserBundle\Model\UserInterface;
@@ -28,6 +29,7 @@ class User extends BaseUser implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     protected $id;
 
@@ -50,7 +52,7 @@ class User extends BaseUser implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user:read" ,"structure:show" ,"activite:read" ,"activite:show" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"user:read","structure:show" ,"activite:read" ,"activite:show" ,"evenement:read" ,"evenement:detail"})
      */
     private $nom;
 
@@ -102,7 +104,6 @@ class User extends BaseUser implements UserInterface
 
     /**
      * @ORM\OneToOne(targetEntity=TypeService::class, inversedBy="user", cascade={"persist", "remove"})
-     * @Groups({"user:read"})
      */
     private $typeService;
 
@@ -112,11 +113,25 @@ class User extends BaseUser implements UserInterface
      */
     private $structure;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"user:read"})
+
+     */
+    private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=difficulte::class, mappedBy="user")
+     */
+    private $difficulte;
+
     public function __construct()
     {
         parent::__construct();
+        $this->status= true;
         $this->activites = new ArrayCollection();
         $this->evenements = new ArrayCollection();
+        $this->difficulte = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -351,6 +366,48 @@ class User extends BaseUser implements UserInterface
     public function setStructure(?structure $structure): self
     {
         $this->structure = $structure;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|difficulte[]
+     */
+    public function getDifficulte(): Collection
+    {
+        return $this->difficulte;
+    }
+
+    public function addDifficulte(difficulte $difficulte): self
+    {
+        if (!$this->difficulte->contains($difficulte)) {
+            $this->difficulte[] = $difficulte;
+            $difficulte->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDifficulte(difficulte $difficulte): self
+    {
+        if ($this->difficulte->removeElement($difficulte)) {
+            // set the owning side to null (unless already changed)
+            if ($difficulte->getUser() === $this) {
+                $difficulte->setUser(null);
+            }
+        }
 
         return $this;
     }

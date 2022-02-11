@@ -42,35 +42,35 @@ class ExceptionController extends Controller
      *
      * @throws \InvalidArgumentException When the exception template does not exist
      */
-    public function show(ParameterBagInterface $params, Request $request, FlattenException $exception, \Swift_Mailer $mailer, DebugLoggerInterface $logger = null, UrlGeneratorInterface $router)
-    {
-        $excep = $request->attributes->get('exception')->getMessage();
-        $code = $request->attributes->get('exception')->getStatusCode();
-        $serveur = $request->getSchemeAndHttpHost();
-        $ERREUR = "<h1>Alerte:</strong> Erreur rencontrée !</h1>";
-        $date = 'Erreur survenue le '.date('Y-m-d à H:i:s');
-        $messageOutput = $ERREUR . '<h3>Merci pour la correction de cette erreur qui suit, dans les meilleurs délais.<br>Erreur:<br>' .$excep. '<br>Code: ' .$code. '<br>Host: ' .$serveur. '<br>' .$date. '</h3>';
-        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
-        $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
-        //var_dump($code);
-        if($code==404 || $code==500) {
-            $dossier = __DIR__."/../../public/uploads/bugs/".date("Y_m_d");
-            if(!file_exists($dossier)) {
-                mkdir($dossier, 0775, true);
-            }
-            $file = "bug-".Date("His").".html";
-            $chemin = $dossier."/".$file;
-            file_put_contents($chemin, $this->twig->render('@Twig/Exception/exception_full.html.twig', $templateData));
-            // mailer
-            //contact admin
-            $to = array("ddiatou1@gmail.com");
-            $cc = array("vieva03@gmail.com");
-            $subject = 'Erreur de Traitement';
-            $this->sendMailError($mailer, $subject, $messageOutput, $to, $cc, $chemin);
-        }
-        //return new Response($this->twig->render('exception/error.html.twig',['code' => $code ]));
-        return new JsonResponse(array("code"=>404,"status"=>false,"message"=>"une erreur a été détectée, merci de contacter l'administrateur du site"));
-    }
+    // public function show(ParameterBagInterface $params, Request $request, FlattenException $exception, \Swift_Mailer $mailer, DebugLoggerInterface $logger = null, UrlGeneratorInterface $router)
+    // {
+    //     $excep = $request->attributes->get('exception')->getMessage();
+    //     $code = $request->attributes->get('exception')->getStatusCode();
+    //     $serveur = $request->getSchemeAndHttpHost();
+    //     $ERREUR = "<h1>Alerte:</strong> Erreur rencontrée !</h1>";
+    //     $date = 'Erreur survenue le '.date('Y-m-d à H:i:s');
+    //     $messageOutput = $ERREUR . '<h3>Merci pour la correction de cette erreur qui suit, dans les meilleurs délais.<br>Erreur:<br>' .$excep. '<br>Code: ' .$code. '<br>Host: ' .$serveur. '<br>' .$date. '</h3>';
+    //     $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
+    //     $templateData = $this->getTemplateData($currentContent, $code, $exception, $logger);
+    //     //var_dump($code);
+    //     if($code==404 || $code==500) {
+    //         $dossier = __DIR__."/../../public/uploads/bugs/".date("Y_m_d");
+    //         if(!file_exists($dossier)) {
+    //             mkdir($dossier, 0775, true);
+    //         }
+    //         $file = "bug-".Date("His").".html";
+    //         $chemin = $dossier."/".$file;
+    //         file_put_contents($chemin, $this->twig->render('@Twig/Exception/exception_full.html.twig', $templateData));
+    //         // mailer
+    //         //contact admin
+    //         $to = array("ddiatou1@gmail.com");
+    //         $cc = array("vieva03@gmail.com");
+    //         $subject = 'Erreur de Traitement';
+    //         $this->sendMailError($mailer, $subject, $messageOutput, $to, $cc, $chemin);
+    //     }
+    //     //return new Response($this->twig->render('exception/error.html.twig',['code' => $code ]));
+    //     return new JsonResponse(array("code"=>404,"status"=>false,"message"=>"une erreur a été détectée, merci de contacter l'administrateur du site"));
+    // }
 
     /**
      * Determines the template parameters to pass to the view layer.

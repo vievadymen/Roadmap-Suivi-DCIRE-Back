@@ -49,9 +49,13 @@ class DifficulteController extends BaseController
 
             return new JsonResponse($errorsString, Response::HTTP_BAD_REQUEST, [], true);
         }
+        $user = $this->getUser();
+        $structure= $user->getStructure();
         $difficulte->setCreatedAt(new \Datetime());
         $semaine = (int) strftime("%W");
         $difficulte->setSemaine($semaine);
+        $difficulte->setUser($user);
+        $difficulte->setStructure($structure);
         $entityManager = $this->getDoctrine()->getManager();
         // $entityManager->persist($activite);
         $entityManager->persist($difficulte);
@@ -91,9 +95,8 @@ class DifficulteController extends BaseController
     public function detailsDifficulte($id)
     {
         $difficultes = $this->difficulteRepo->find($id);
-        $data['description'] = $difficultes->getDescription();
         // return new JsonResponse($this->difficulteManager->detailsDifficulte($id));
-        $response = $this->json($data, 200, [], ['groups' => 'difficulte:show']);
+        $response = $this->json($difficultes, 200, [], ['groups' => 'difficulte:show']);
 
         return $response;
     }

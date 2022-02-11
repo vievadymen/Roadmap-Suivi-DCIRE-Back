@@ -17,6 +17,7 @@ return [
             [['_route' => 'activites', '_controller' => 'App\\Controller\\ActiviteController::addActivite'], null, ['POST' => 0], null, false, false, null],
             [['_route' => 'activite', '_controller' => 'App\\Controller\\ActiviteController::listActivite'], null, ['GET' => 0], null, false, false, null],
         ],
+        '/api/activite-mail' => [[['_route' => 'activite-mail', '_controller' => 'App\\Controller\\ActiviteController::sendworkflow'], null, ['GET' => 0], null, false, false, null]],
         '/api/rechercheactivite' => [[['_route' => 'app_activite_rechercheractivite', '_controller' => 'App\\Controller\\ActiviteController::rechercherActivite'], null, ['GET' => 0], null, false, false, null]],
         '/api/autorite' => [
             [['_route' => 'autorites', '_controller' => 'App\\Controller\\AutoriteController::addAutorite'], null, ['POST' => 0], null, false, false, null],
@@ -35,6 +36,8 @@ return [
             [['_route' => 'evenements', '_controller' => 'App\\Controller\\EvenementController::addEvenement'], null, ['POST' => 0], null, false, false, null],
             [['_route' => 'evenement', '_controller' => 'App\\Controller\\EvenementController::listEvenement'], null, ['GET' => 0], null, false, false, null],
         ],
+        '/api/evenement-mail' => [[['_route' => 'evenement-mail', '_controller' => 'App\\Controller\\EvenementController::sendworkflow'], null, ['GET' => 0], null, false, false, null]],
+        '/api/evenement/extraction' => [[['_route' => 'evenement-extraction', '_controller' => 'App\\Controller\\EvenementController::ExtractionEvenement'], null, ['GET' => 0], null, false, false, null]],
         '/api/rechercheevenement' => [[['_route' => 'app_evenement_rechercherevenement', '_controller' => 'App\\Controller\\EvenementController::recherchErevenement'], null, ['GET' => 0], null, false, false, null]],
         '/extraction' => [[['_route' => 'extraction', '_controller' => 'App\\Controller\\ExtractionController::index'], null, null, null, false, false, null]],
         '/historiques' => [[['_route' => 'app_historique_getallhistoriques', '_controller' => 'App\\Controller\\HistoriqueController::getAllHistoriques'], null, ['GET' => 0], null, false, false, null]],
@@ -49,7 +52,7 @@ return [
         '/pointDeCoordination' => [[['_route' => 'pointDeCoordinations', '_controller' => 'App\\Controller\\PointDeCoordinationController::addPointDeCoordination'], null, ['POST' => 0], null, false, false, null]],
         '/pointdecoordination' => [[['_route' => 'pointDeCoordination', '_controller' => 'App\\Controller\\PointDeCoordinationController::listPointDeCoordination'], null, ['GET' => 0], null, false, false, null]],
         '/profil' => [[['_route' => 'app_profil_ajouterprofil', '_controller' => 'App\\Controller\\ProfilController::ajouterProfil'], null, ['POST' => 0], null, false, false, null]],
-        '/profils' => [[['_route' => 'app_profil_listprofil', '_controller' => 'App\\Controller\\ProfilController::listProfil'], null, ['GET' => 0], null, false, false, null]],
+        '/api/profils' => [[['_route' => 'profils', '_controller' => 'App\\Controller\\ProfilController::listProfil'], null, ['GET' => 0], null, false, false, null]],
         '/reinitialisationMotDePass' => [[['_route' => 'app_forgot_password_request', '_controller' => 'App\\Controller\\ResetPasswordController::request'], null, null, null, false, false, null]],
         '/check-email' => [[['_route' => 'app_check_email', '_controller' => 'App\\Controller\\ResetPasswordController::checkEmail'], null, null, null, false, false, null]],
         '/api/structure' => [
@@ -75,7 +78,7 @@ return [
         ],
         '/search' => [[['_route' => 'app_user_searchuser', '_controller' => 'App\\Controller\\UserController::searchUser'], null, ['GET' => 0], null, false, false, null]],
         '/listEmails' => [[['_route' => 'app_user_listemails', '_controller' => 'App\\Controller\\UserController::listEmails'], null, ['GET' => 0], null, false, false, null]],
-        '/workflow' => [[['_route' => 'app_workflow_sendworkflow', '_controller' => 'App\\Controller\\WorkflowController::sendworkflow'], null, null, null, false, false, null]],
+        '/api/workflow' => [[['_route' => 'workflow', '_controller' => 'App\\Controller\\WorkflowController::sendworkflow'], null, ['GET' => 0], null, false, false, null]],
         '/login' => [[['_route' => 'fos_user_security_login', '_controller' => 'fos_user.security.controller:loginAction'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
         '/login_check' => [[['_route' => 'fos_user_security_check', '_controller' => 'fos_user.security.controller:checkAction'], null, ['POST' => 0], null, false, false, null]],
         '/logout' => [[['_route' => 'fos_user_security_logout', '_controller' => 'fos_user.security.controller:logoutAction'], null, ['GET' => 0, 'POST' => 1], null, false, false, null]],
@@ -135,63 +138,70 @@ return [
                         .'|evenement/([^/]++)(?'
                             .'|(*:438)'
                         .')'
+                        .'|mois/evenement/([^/]++)(*:470)'
                         .'|structure(?'
-                            .'|/([^/]++)(?'
-                                .'|(*:471)'
+                            .'|\\-(?'
+                                .'|event(?'
+                                    .'|/([^/]++)/([^/]++)(*:521)'
+                                    .'|\\-mois/([^/]++)/([^/]++)(*:553)'
+                                .')'
+                                .'|activite/([^/]++)/([^/]++)(*:588)'
+                                .'|diff/([^/]++)/([^/]++)(*:618)'
                             .')'
-                            .'|\\-activite/([^/]++)(*:499)'
+                            .'|/([^/]++)(?'
+                                .'|(*:639)'
+                            .')'
                         .')'
+                        .'|user/([^/]++)(*:662)'
+                        .'|blockUser/([^/]++)(*:688)'
                     .')'
-                    .'|(?:/(index)(?:\\.([^/]++))?)?(*:537)'
+                    .'|(?:/(index)(?:\\.([^/]++))?)?(*:725)'
                     .'|/(?'
-                        .'|docs(?:\\.([^/]++))?(*:568)'
-                        .'|contexts/(.+)(?:\\.([^/]++))?(*:604)'
+                        .'|docs(?:\\.([^/]++))?(*:756)'
+                        .'|contexts/(.+)(?:\\.([^/]++))?(*:792)'
                     .')'
                 .')'
                 .'|/commentaire/([^/]++)(?'
-                    .'|(*:638)'
+                    .'|(*:826)'
                 .')'
                 .'|/delete\\-(?'
-                    .'|commentaire/([^/]++)(*:679)'
-                    .'|pointDeCoordination/([^/]++)(*:715)'
-                    .'|trancheHoraire/([^/]++)(*:746)'
+                    .'|commentaire/([^/]++)(*:867)'
+                    .'|pointDeCoordination/([^/]++)(*:903)'
+                    .'|trancheHoraire/([^/]++)(*:934)'
                 .')'
                 .'|/user(?'
-                    .'|historique/([^/]++)(*:782)'
-                    .'|/([^/]++)(?'
-                        .'|(*:802)'
-                    .')'
+                    .'|historique/([^/]++)(*:970)'
+                    .'|/([^/]++)(*:987)'
                 .')'
-                .'|/historiquesDates/([^/]++)(*:838)'
+                .'|/historiquesDates/([^/]++)(*:1022)'
                 .'|/interim/([^/]++)(?'
-                    .'|(*:866)'
+                    .'|(*:1051)'
                 .')'
                 .'|/p(?'
                     .'|eriodicite/([^/]++)(?'
-                        .'|(*:902)'
+                        .'|(*:1088)'
                     .')'
-                    .'|ointdecoordination/([^/]++)(*:938)'
+                    .'|ointdecoordination/([^/]++)(*:1125)'
                     .'|rofil/([^/]++)(?'
-                        .'|(*:963)'
+                        .'|(*:1151)'
                     .')'
                 .')'
-                .'|/PointDeCoordination/([^/]++)(*:1002)'
+                .'|/PointDeCoordination/([^/]++)(*:1191)'
                 .'|/re(?'
                     .'|set(?'
-                        .'|(?:/([^/]++))?(*:1037)'
-                        .'|ting/reset/([^/]++)(*:1065)'
+                        .'|(?:/([^/]++))?(*:1226)'
+                        .'|ting/reset/([^/]++)(*:1254)'
                     .')'
-                    .'|gister/confirm/([^/]++)(*:1098)'
+                    .'|gister/confirm/([^/]++)(*:1287)'
                 .')'
                 .'|/t(?'
                     .'|rancheHoraire/([^/]++)(?'
-                        .'|(*:1138)'
+                        .'|(*:1327)'
                     .')'
                     .'|ypeService/([^/]++)(?'
-                        .'|(*:1170)'
+                        .'|(*:1359)'
                     .')'
                 .')'
-                .'|/blockUser/([^/]++)(*:1200)'
             .')/?$}sD',
     ],
     [ // $dynamicRoutes
@@ -229,57 +239,57 @@ return [
             [['_route' => 'delete_evenement', '_controller' => 'App\\Controller\\EvenementController::deleteEvenement'], ['id'], ['DELETE' => 0], null, false, true, null],
             [['_route' => 'app_evenement_modifievenement', '_controller' => 'App\\Controller\\EvenementController::modifiEvenement'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        471 => [
-            [['_route' => 'app_structure_detailsstructure', '_controller' => 'App\\Controller\\StructureController::detailsStructure'], ['id'], ['GET' => 0], null, false, true, null],
+        470 => [[['_route' => 'mois-evenement', '_controller' => 'App\\Controller\\EvenementController::MoisEvenement'], ['mois'], ['GET' => 0], null, false, true, null]],
+        521 => [[['_route' => 'app_structure_structureevent', '_controller' => 'App\\Controller\\StructureController::StructureEvent'], ['id', 'semaine'], ['GET' => 0], null, false, true, null]],
+        553 => [[['_route' => 'app_structure_structureeventmois', '_controller' => 'App\\Controller\\StructureController::structurEeventMois'], ['id', 'mois'], ['GET' => 0], null, false, true, null]],
+        588 => [[['_route' => 'app_structure_structureactivite', '_controller' => 'App\\Controller\\StructureController::structureActivite'], ['id', 'semaine'], ['GET' => 0], null, false, true, null]],
+        618 => [[['_route' => 'app_structure_structurediff', '_controller' => 'App\\Controller\\StructureController::structurediff'], ['id', 'semaine'], ['GET' => 0], null, false, true, null]],
+        639 => [
+            [['_route' => 'app_structure_detailsevent', '_controller' => 'App\\Controller\\StructureController::detailsEvent'], ['id'], ['GET' => 0], null, false, true, null],
             [['_route' => 'app_structure_modifistructure', '_controller' => 'App\\Controller\\StructureController::modifiStructure'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        499 => [[['_route' => 'app_structure_structureactivite', '_controller' => 'App\\Controller\\StructureController::structureActivite'], ['id'], ['GET' => 0], null, false, true, null]],
-        537 => [[['_route' => 'api_entrypoint', '_controller' => 'api_platform.action.entrypoint', '_format' => '', '_api_respond' => 'true', 'index' => 'index'], ['index', '_format'], null, null, false, true, null]],
-        568 => [[['_route' => 'api_doc', '_controller' => 'api_platform.action.documentation', '_format' => '', '_api_respond' => 'true'], ['_format'], null, null, false, true, null]],
-        604 => [[['_route' => 'api_jsonld_context', '_controller' => 'api_platform.jsonld.action.context', '_format' => 'jsonld', '_api_respond' => 'true'], ['shortName', '_format'], null, null, false, true, null]],
-        638 => [
+        662 => [[['_route' => 'app_user_detailsuser', '_controller' => 'App\\Controller\\UserController::detailsUser'], ['id'], ['GET' => 0], null, false, true, null]],
+        688 => [[['_route' => 'app_user_bloquerutilisateur', '_controller' => 'App\\Controller\\UserController::bloquerUtilisateur'], ['id'], ['POST' => 0], null, false, true, null]],
+        725 => [[['_route' => 'api_entrypoint', '_controller' => 'api_platform.action.entrypoint', '_format' => '', '_api_respond' => 'true', 'index' => 'index'], ['index', '_format'], null, null, false, true, null]],
+        756 => [[['_route' => 'api_doc', '_controller' => 'api_platform.action.documentation', '_format' => '', '_api_respond' => 'true'], ['_format'], null, null, false, true, null]],
+        792 => [[['_route' => 'api_jsonld_context', '_controller' => 'api_platform.jsonld.action.context', '_format' => 'jsonld', '_api_respond' => 'true'], ['shortName', '_format'], null, null, false, true, null]],
+        826 => [
             [['_route' => 'app_commentaire_detailscommentaire', '_controller' => 'App\\Controller\\CommentaireController::detailsCommentaire'], ['id'], ['GET' => 0], null, false, true, null],
             [['_route' => 'app_commentaire_modificommentaire', '_controller' => 'App\\Controller\\CommentaireController::modifiCommentaire'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        679 => [[['_route' => 'delete_commentaire', '_controller' => 'App\\Controller\\CommentaireController::deleteCommentaire'], ['id'], ['DELETE' => 0], null, false, true, null]],
-        715 => [[['_route' => 'delete_pointDeCoordination', '_controller' => 'App\\Controller\\PointDeCoordinationController::deletePointDeCoordination'], ['id'], ['DELETE' => 0], null, false, true, null]],
-        746 => [[['_route' => 'delete_trancheHoraire', '_controller' => 'App\\Controller\\TrancheHoraireController::deletetrancheHoraire'], ['id'], ['DELETE' => 0], null, false, true, null]],
-        782 => [[['_route' => 'app_historique_getuserhistoriques', '_controller' => 'App\\Controller\\HistoriqueController::getUserHistoriques'], ['id'], ['GET' => 0], null, false, true, null]],
-        802 => [
-            [['_route' => 'app_user_detailsuser', '_controller' => 'App\\Controller\\UserController::detailsUser'], ['id'], ['GET' => 0], null, false, true, null],
-            [['_route' => 'app_user_modifierutilisateur', '_controller' => 'App\\Controller\\UserController::modifierUtilisateur'], ['id'], ['PUT' => 0], null, false, true, null],
-        ],
-        838 => [[['_route' => 'app_historique_gethistoriquesentre', '_controller' => 'App\\Controller\\HistoriqueController::gethistoriquesEntre'], ['id'], ['POST' => 0], null, false, true, null]],
-        866 => [
+        867 => [[['_route' => 'delete_commentaire', '_controller' => 'App\\Controller\\CommentaireController::deleteCommentaire'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        903 => [[['_route' => 'delete_pointDeCoordination', '_controller' => 'App\\Controller\\PointDeCoordinationController::deletePointDeCoordination'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        934 => [[['_route' => 'delete_trancheHoraire', '_controller' => 'App\\Controller\\TrancheHoraireController::deletetrancheHoraire'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        970 => [[['_route' => 'app_historique_getuserhistoriques', '_controller' => 'App\\Controller\\HistoriqueController::getUserHistoriques'], ['id'], ['GET' => 0], null, false, true, null]],
+        987 => [[['_route' => 'app_user_modifierutilisateur', '_controller' => 'App\\Controller\\UserController::modifierUtilisateur'], ['id'], ['PUT' => 0], null, false, true, null]],
+        1022 => [[['_route' => 'app_historique_gethistoriquesentre', '_controller' => 'App\\Controller\\HistoriqueController::gethistoriquesEntre'], ['id'], ['POST' => 0], null, false, true, null]],
+        1051 => [
             [['_route' => 'app_interim_detailsinterim', '_controller' => 'App\\Controller\\InterimController::detailsInterim'], ['id'], ['GET' => 0], null, false, true, null],
             [['_route' => 'delete_interim', '_controller' => 'App\\Controller\\InterimController::deleteInterim'], ['id'], ['DELETE' => 0], null, false, true, null],
             [['_route' => 'app_interim_modifiinterim', '_controller' => 'App\\Controller\\InterimController::modifiInterim'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        902 => [
+        1088 => [
             [['_route' => 'app_periodicite_detailsperiodicite', '_controller' => 'App\\Controller\\PeriodiciteController::detailsPeriodicite'], ['id'], ['GET' => 0], null, false, true, null],
             [['_route' => 'delete_periodicite', '_controller' => 'App\\Controller\\PeriodiciteController::deletePeriodicite'], ['id'], ['DELETE' => 0], null, false, true, null],
             [['_route' => 'app_periodicite_modifiperiodicite', '_controller' => 'App\\Controller\\PeriodiciteController::modifiPeriodicite'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        938 => [[['_route' => 'modifie_pointDeCoordination', '_controller' => 'App\\Controller\\PointDeCoordinationController::modifiPointDeCoordination'], ['id'], ['PUT' => 0], null, false, true, null]],
-        963 => [
+        1125 => [[['_route' => 'modifie_pointDeCoordination', '_controller' => 'App\\Controller\\PointDeCoordinationController::modifiPointDeCoordination'], ['id'], ['PUT' => 0], null, false, true, null]],
+        1151 => [
             [['_route' => 'app_profil_deleteprofil', '_controller' => 'App\\Controller\\ProfilController::deleteProfil'], ['id'], ['DELETE' => 0], null, false, true, null],
             [['_route' => 'app_profil_modifierprofil', '_controller' => 'App\\Controller\\ProfilController::modifierProfil'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        1002 => [[['_route' => 'app_pointdecoordination_detailspointdecoordination', '_controller' => 'App\\Controller\\PointDeCoordinationController::detailsPointDeCoordination'], ['id'], ['GET' => 0], null, false, true, null]],
-        1037 => [[['_route' => 'app_reset_password', 'token' => null, '_controller' => 'App\\Controller\\ResetPasswordController::reset'], ['token'], ['POST' => 0], null, false, true, null]],
-        1065 => [[['_route' => 'fos_user_resetting_reset', '_controller' => 'fos_user.resetting.controller:resetAction'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
-        1098 => [[['_route' => 'fos_user_registration_confirm', '_controller' => 'fos_user.registration.controller:confirmAction'], ['token'], ['GET' => 0], null, false, true, null]],
-        1138 => [
+        1191 => [[['_route' => 'app_pointdecoordination_detailspointdecoordination', '_controller' => 'App\\Controller\\PointDeCoordinationController::detailsPointDeCoordination'], ['id'], ['GET' => 0], null, false, true, null]],
+        1226 => [[['_route' => 'app_reset_password', 'token' => null, '_controller' => 'App\\Controller\\ResetPasswordController::reset'], ['token'], ['POST' => 0], null, false, true, null]],
+        1254 => [[['_route' => 'fos_user_resetting_reset', '_controller' => 'fos_user.resetting.controller:resetAction'], ['token'], ['GET' => 0, 'POST' => 1], null, false, true, null]],
+        1287 => [[['_route' => 'fos_user_registration_confirm', '_controller' => 'fos_user.registration.controller:confirmAction'], ['token'], ['GET' => 0], null, false, true, null]],
+        1327 => [
             [['_route' => 'app_tranchehoraire_detailstranchehoraire', '_controller' => 'App\\Controller\\TrancheHoraireController::detailstrancheHoraire'], ['id'], ['GET' => 0], null, false, true, null],
             [['_route' => 'modifie_trancheHoraire', '_controller' => 'App\\Controller\\TrancheHoraireController::modifitrancheHoraire'], ['id'], ['PUT' => 0], null, false, true, null],
         ],
-        1170 => [
+        1359 => [
             [['_route' => 'app_typeservice_detailstypeservice', '_controller' => 'App\\Controller\\TypeServiceController::detailsTypeService'], ['id'], ['GET' => 0], null, false, true, null],
             [['_route' => 'delete_typeService', '_controller' => 'App\\Controller\\TypeServiceController::deleteTypeService'], ['id'], ['DELETE' => 0], null, false, true, null],
             [['_route' => 'app_typeservice_modifitypeservice', '_controller' => 'App\\Controller\\TypeServiceController::modifiTypeService'], ['id'], ['PUT' => 0], null, false, true, null],
-        ],
-        1200 => [
-            [['_route' => 'app_user_bloquerutilisateur', '_controller' => 'App\\Controller\\UserController::bloquerUtilisateur'], ['id'], ['POST' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],

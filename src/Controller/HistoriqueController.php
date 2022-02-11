@@ -17,10 +17,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class HistoriqueController extends BaseController{
     private $historiqueManager;
-    public function __construct(HistoriqueManager $historiqueManager,JWTTokenManagerInterface $jwtManager, \Swift_Mailer $mailer, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, ValidatorInterface $validator)
+    public function __construct(HistoriqueManager $historiqueManager,JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, ValidatorInterface $validator)
     {
         $this->historiqueManager=$historiqueManager;
-        parent::__construct($jwtManager, $mailer, $tokenStorage, $em, $validator);
+       // parent::__construct($jwtManager, $mailer, $tokenStorage, $em, $validator);
     }
 
     /**

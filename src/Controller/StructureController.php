@@ -36,7 +36,6 @@ class StructureController extends BaseController
      */
     public function addStructure(Request $request ,ValidatorInterface $validator ,SerializerInterface $serializer): Response
     {
-
         $structure = $serializer->deserialize($request->getContent(), structure::class,'json');
         $errors = $validator->validate($structure);
     if (count($errors) > 0)
@@ -81,23 +80,60 @@ class StructureController extends BaseController
          return  $this->json($structures, 200, [], ['groups' => 'structure:read']);
     }
       /**
+     * @Get("/api/structure-event/{id}/{semaine}")
+     * @QMLogger(message="Details structure")
+     */
+    public function StructureEvent($id, $semaine)
+    {
+        $structure = $this->structureRepo->find($id)->getId();
+        $structures= $this->structureRepo->goToWeekEvent($structure, $semaine);
+        return  $this->json($structures, 200, [], ['groups' => 'structure:show']);
+
+    }
+     /**
      * @Get("/api/structure/{id}")
      * @QMLogger(message="Details structure")
      */
-    public function detailsStructure($id)
+    public function detailsEvent($id)
     {
         $structures = $this->structureRepo->find($id);
         return  $this->json($structures, 200, [], ['groups' => 'structure:show']);
 
     }
+
      /**
-     * @Get("/api/structure-activite/{id}")
+     * @Get("/api/structure-event-mois/{id}/{mois}")
      * @QMLogger(message="Details structure")
      */
-    public function structureActivite($id)
+    public function structurEeventMois($id, $mois)
     {
-        $structures = $this->structureRepo->find($id);
+        $structure = $this->structureRepo->find($id)->getId();
+        $structures= $this->structureRepo->goToMoisEvent($structure, $mois);
+        return  $this->json($structures, 200, [], ['groups' => 'structure:mois']);
+
+    }
+
+     /**
+     * @Get("/api/structure-activite/{id}/{semaine}")
+     * @QMLogger(message="Details structure")
+     */
+    public function structureActivite($id, $semaine)
+    {
+        $structure = $this->structureRepo->find($id)->getId();
+        $structures= $this->structureRepo->goToWeek($structure, $semaine);
         return  $this->json($structures, 200, [], ['groups' => 'structure:activite']);
+
+    }
+
+    /**
+     * @Get("/api/structure-diff/{id}/{semaine}")
+     * @QMLogger(message="Details structure")
+     */
+    public function structurediff($id, $semaine)
+    {
+        $structure = $this->structureRepo->find($id)->getId();
+        $structures= $this->structureRepo->goToWeekDiff($structure, $semaine);
+        return  $this->json($structures, 200, [], ['groups' => 'structure:diff']);
 
     }
 

@@ -3,6 +3,7 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\BaseNode;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -17,7 +18,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('lexik_jwt_authentication');
 
@@ -36,6 +37,10 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('public_key')
                     ->info('The key used to sign tokens (useless for HMAC). If not set, the key will be automatically computed from the secret key.')
                     ->defaultNull()
+                ->end()
+                ->arrayNode('additional_public_keys')
+                    ->info('Multiple public keys to try to verify token signature. If none is given, it will use the key provided in "public_key".')
+                    ->scalarPrototype()->end()
                 ->end()
                 ->scalarNode('secret_key')
                     ->info('The key used to sign tokens. It can be a raw secret (for HMAC), a raw RSA/ECDSA key or the path to a file itself being plaintext or PEM.')
@@ -77,6 +82,9 @@ class Configuration implements ConfigurationInterface
                     ->info('If null, the user ID claim will have the same name as the one defined by the option "user_identity_field"')
                 ->end()
                 ->append($this->getTokenExtractorsNode())
+                ->scalarNode('remove_token_from_body_when_cookies_used')
+                    ->defaultTrue()
+                ->end()
                 ->arrayNode('set_cookies')
                     ->fixXmlConfig('set_cookie')
                     ->normalizeKeys(false)
@@ -106,7 +114,7 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function getTokenExtractorsNode()
+    private function getTokenExtractorsNode(): ArrayNodeDefinition
     {
         $builder = new TreeBuilder('token_extractors');
         $node = $builder->getRootNode();
@@ -159,13 +167,8 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Returns the correct deprecation parameters for setDeprecated.
-     *
-     * @param string $message
-     * @param string $version
-     *
-     * @return string[]
      */
-    private function getDeprecationParameters($message, $version)
+    private function getDeprecationParameters(string $message, string $version): array
     {
         if (method_exists(BaseNode::class, 'getDeprecation')) {
             return ['lexik/jwt-authentication-bundle', $version, $message];

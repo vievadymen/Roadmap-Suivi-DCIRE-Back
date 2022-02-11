@@ -1,16 +1,18 @@
 <?php
 
-
 namespace App\Service;
-
-
-use App\Entity\Action;
-use App\Entity\Contrat;
-use App\Entity\Interimaire;
+use Swift;
+use DateTime;
+use Swift_Mailer;
 use App\Entity\User;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Mime\Email;
+use App\Repository\UserRepository;
+use Symfony\Component\Mime\Message;
+use Symfony\Component\Mailer\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BaseService
@@ -19,145 +21,53 @@ class BaseService
     protected $em;
     protected $interimaireMapping;
     protected $tokenStorage;
-    protected $cc=array('mohamed.sall@orange-sonatel.com','binetou.diallo@orange-sonatel.com',"babacar.fall4@orange-sonatel.com");
-    public function __construct(\Swift_Mailer $mailer, EntityManagerInterface $em,TokenStorageInterface $tokenStorage)
+    protected $cc=array('ddiatou1@gmail.com','vieva03@gmail.com');
+    
+    public function __construct(MailerInterface $mailer, EntityManagerInterface $em,TokenStorageInterface $tokenStorage)
     {
-        $this->mailer=$mailer;
+       //$this->mailer=$mailer;
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
+        $this->mailer= $mailer;
     }
-    public function sendMail($data){
-         $message = (new \Swift_Message())
-            ->setFrom(array('no-reply@orange-sonatel.com'=>'KOLEURE SONATEL'))
-            ->setTo($data['to']);
-         if (isset($data['cc'])){
-             $message->setCc($data['cc']);
-         }
-            $message->setSubject($data['subject'])
-            //   ->attach(\Swift_Attachment::fromPath($chemin))
-            ->setBody($data['body'] ,
-                'text/html');
-        $this->mailer->send($message);
+
+    public function sendMail($data)
+    {
+       
+            $email= (new Email())
+                ->from('diadiadev03@gmail.com')
+                ->to($data['to'])
+                ->subject('LA PLATEFORME DE LA DIGITALISATION DE LA ROADMAP ')
+                ->html($data['body']);
+                if(isset($data['cc'])){
+                    $email->cc($data['cc']);
+                }
+    
+            $this->mailer->send($email);
+    
+  
     }
     
-    public function Date2Semaine($date)
-    {
-        $date_test = $date;
-        $good_format=strtotime ($date_test);
-        return date('W',$good_format);
-    }
-
-    public function uploadFile($file,$directory){
-        $allowed  = ['jpg', 'jpeg', 'png', 'gif','pdf','PDF','JPG','JPEG','PNG'];
-        if ($file){
-            $fichier = md5(uniqid()).'.'.$file->guessExtension();
-            $bool=false;
-            if (in_array($file->guessExtension(),$allowed)){
-                $bool=true;
-            }
-            if ($bool){
-                $file->move(
-                    $directory,
-                    $fichier
-                );
-            }
-            return array(
-                "filename"=>$fichier,
-                "isValid"=>$bool
-            );
+    public function Date2Semaine($date=null)
+    { 
+        if(!$date){
+            $date_test= new \DateTime();
         }else{
-            return array(
-                "filename"=>null,
-                "isValid"=>false
-            );
+            $date_test= $date;
         }
-
+        //dd($date_test->format("W"));
+        return $date_test->format("W");
     }
-     public function setSqlAdvancedSearch($data){
-        $i=0;
-        $req='';
-        $join=array();
-        if (count($data)==0){
-            return array("success"=>false,"code"=>502,"data"=>array("message"=>"Veuillez renseigner un filtre pour la recherche!"));
-        }
-        foreach ($data as $key=>$value){
-            if ($this->generateKey($key)=='p'){
-                if (count($data)>=1){
-                    if($i==0){
-                        $req.=$this->generateKey($key).".".$key." LIKE '%".$value."%'";
-                    }elseif ($i>0 && $i<=count($data)-1){
-                        $req.=" AND ".$this->generateKey($key).".".$key." LIKE '%".$value."%'";
-                    }
-                }
-            }elseif ($this->generateKey($key)=='i' && $key=='agence'){
-                $join['i']=" JOIN agence a ON i.agence_id = a.id ";
-                if (count($data)>=1){
-                    if($i==0){
-                        $req.=$this->generateKey($key).".".$key."_id = ".$value;
-                    }elseif ($i>0 && $i<=count($data)-1){
-                        $req.=" AND ".$this->generateKey($key).".".$key."_id =  ".$value;
-                    }
-                }
-            }elseif ($this->generateKey($key)=='i' && $key!='agence'){
-                if (count($data)>=1){
-                    if($i==0){
-                        $req.=$this->generateKey($key).".".$key." LIKE '%".$value."%'";
-                    }elseif ($i>0 && $i<=count($data)-1){
-                        $req.=" AND ".$this->generateKey($key).".".$key." LIKE '%".$value."%'";
-                    }
-                }
-            }elseif ($this->generateKey($key)=='c'){
-                $join['c']=" JOIN contrat c ON c.interimaire_id = i.id ";
 
-                if ($key=="date_signature"){
-                    $p= " YEAR(c.date_signature) = $value";
-                }else{
-                    $p=$this->generateKey($key).".".$key." LIKE '%".$value."%'";
-                }
-                if (count($data)>=1){
-                    if($i==0){
-                        $req.=$p;
-                    }elseif ($i>0 && $i<=count($data)-1){
-                        $req.=" AND ".$p;
-                    }
-                }
-            }elseif ($this->generateKey($key)=='s' &&  $key!='direction'){
-             //   $join['s']=" JOIN structure s ON i.structure_id = s.id  ";
-
-                if (count($data)>=1){
-                    if($i==0){
-                        $req.=$this->generateKey($key).".".$key." LIKE '%".$value."%'";
-                    }elseif ($i>0 && $i<=count($data)-1){
-                        $req.=" AND ".$this->generateKey($key).".".$key." LIKE '%".$value."%'";
-                    }
-                }
-            }elseif ($this->generateKey($key)=='s' &&  $key=='direction'){
-
-              //  $join['s']=" JOIN structure s ON i.structure_id = s.id  ";
-                if (count($data)>=1){
-                    if($i==0){
-                        $req.=$this->generateKey($key).".".$key."_id= ".$value;
-                    }elseif ($i>0 && $i<=count($data)-1){
-                        $req.=" AND ".$this->generateKey($key).".".$key."_id= ".$value;
-                    }
-                }
-            }
-            $i++;
+    public function Date2Mois($date=null)
+    { 
+        if(!$date){
+            $date_test= new \DateTime();
+        }else{
+            $date_test= $date;
         }
-         return array("req"=>$req,"join"=>$join);
-    }
-    private function generateKey($key){
-        $cle='';
-        if ($key=='nom' || $key=='prenom' ||$key=='matricule' ||  $key=='email'||  $key=='fonction'){
-            $cle='p';
-        }elseif ($key=='agence'){
-            $cle='i';
-        }elseif ( $key=='date_signature' ){
-            $cle='c';
-        }elseif ($key=="direction" || $key=='departement' || $key=='service'){
-            $cle='s';
-        }
-        return $cle;
+        //dd($date_test->format("W"));
+        return $date_test->format("m");
     }
 
 }

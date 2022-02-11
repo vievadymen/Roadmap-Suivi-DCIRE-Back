@@ -38,9 +38,9 @@ class ResetPasswordController extends AbstractController
 	protected $mailer;
     protected $em;
 
-    public function __construct(EntityManagerInterface $em, ResetPasswordHelperInterface $resetPasswordHelper,EngineInterface $templating,\Swift_Mailer $mailer)
+    public function __construct(EntityManagerInterface $em, ResetPasswordHelperInterface $resetPasswordHelper,EngineInterface $templating)
     {
-        $this->mailer = $mailer;
+        //$this->mailer = $mailer;
         $this->resetPasswordHelper = $resetPasswordHelper;
 		$this->templating = $templating;
         $this->em=$em;

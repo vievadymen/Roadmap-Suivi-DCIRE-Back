@@ -24,6 +24,7 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
             'groups' => [
                 1 => [
                     'commentaire:read',
+                    'evenement:extraction',
                     'evenement:read',
                     'evenement:detail',
                 ],

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Service;
 use App\Entity\Activite;
 use App\Entity\Evenement;
+use App\Entity\Difficulte;
 use App\Entity\Extraction;
 use App\Entity\TypeStructure;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,15 +23,14 @@ class Structure
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"activite:read" ,"structure:activite", "structure:show" ,"structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
-
+     * @Groups({"activite:read" , "user:read","structure:diff" ,"structure:struc" ,"structure:activite", "structure:show" ,"structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
      * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"activite:read","structure:event" ,"structure:activite", "structure:show" ,"structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
+     * @Groups({"activite:read", "user:read", "user:read","structure:mois", "evenement:extraction" ,"structure:diff", "structure:struc" ,"structure:event" ,"structure:activite", "structure:show" ,"structure:read","activite:show","typeService:read", "evenement:read" ,"evenement:detail"})
      */
     private $libelle;
 
@@ -52,7 +52,7 @@ class Structure
 
     /**
      * @ORM\OneToMany(targetEntity=evenement::class, mappedBy="structure")
-     * @Groups({"structure:show" ,"structure:event" })
+     * @Groups({"structure:show" ,"structure:mois", "structure:event", "structure:read" })
      * 
      */
     private $evenement;
@@ -74,6 +74,17 @@ class Structure
      */
     private $color;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $semaine;
+
+    /**
+     * @ORM\OneToMany(targetEntity=difficulte::class, mappedBy="structure")
+     * @Groups({"structure:diff" })
+     */
+    private $difficulte;
+
  
 
     public function __construct()
@@ -83,6 +94,7 @@ class Structure
         $this->services = new ArrayCollection();
         $this->typeServices = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->difficulte = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -254,6 +266,48 @@ class Structure
     public function setColor(?string $color): self
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    public function getSemaine(): ?int
+    {
+        return $this->semaine;
+    }
+
+    public function setSemaine(?int $semaine): self
+    {
+        $this->semaine = $semaine;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|difficulte[]
+     */
+    public function getDifficulte(): Collection
+    {
+        return $this->difficulte;
+    }
+
+    public function addDifficulte(difficulte $difficulte): self
+    {
+        if (!$this->difficulte->contains($difficulte)) {
+            $this->difficulte[] = $difficulte;
+            $difficulte->setStructure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDifficulte(difficulte $difficulte): self
+    {
+        if ($this->difficulte->removeElement($difficulte)) {
+            // set the owning side to null (unless already changed)
+            if ($difficulte->getStructure() === $this) {
+                $difficulte->setStructure(null);
+            }
+        }
 
         return $this;
     }

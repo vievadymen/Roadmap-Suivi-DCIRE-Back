@@ -87,6 +87,12 @@ class LexikJWTAuthenticationExtension extends Extension
             ->replaceArgument(0, $config['secret_key'])
             ->replaceArgument(1, $config['public_key']);
 
+        if (isset($config['additional_public_keys'])) {
+            $container
+                ->findDefinition('lexik_jwt_authentication.key_loader')
+                ->replaceArgument(3, $config['additional_public_keys']);
+        }
+
         $container->setParameter('lexik_jwt_authentication.encoder.signature_algorithm', $encoderConfig['signature_algorithm']);
         $container->setParameter('lexik_jwt_authentication.encoder.crypto_engine', $encoderConfig['crypto_engine']);
 
@@ -94,6 +100,12 @@ class LexikJWTAuthenticationExtension extends Extension
         $container
             ->getDefinition('lexik_jwt_authentication.extractor.chain_extractor')
             ->replaceArgument(0, $tokenExtractors);
+
+        if (false === $config['remove_token_from_body_when_cookies_used']) {
+            $container
+                ->getDefinition('lexik_jwt_authentication.handler.authentication_success')
+                ->replaceArgument(3, false);
+        }
 
         if ($config['set_cookies']) {
             $loader->load('cookie.xml');
@@ -103,7 +115,7 @@ class LexikJWTAuthenticationExtension extends Extension
                 $container
                     ->setDefinition($id = "lexik_jwt_authentication.cookie_provider.$name", new ChildDefinition('lexik_jwt_authentication.cookie_provider'))
                     ->replaceArgument(0, $name)
-                    ->replaceArgument(1, $attributes['lifetime'] ?: ($config['token_ttl'] ?: 0))
+                    ->replaceArgument(1, $attributes['lifetime'] ?? ($config['token_ttl'] ?: 0))
                     ->replaceArgument(2, $attributes['samesite'])
                     ->replaceArgument(3, $attributes['path'])
                     ->replaceArgument(4, $attributes['domain'])

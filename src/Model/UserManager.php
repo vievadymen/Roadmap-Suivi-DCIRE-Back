@@ -2,51 +2,57 @@
 
 namespace App\Model;
 
-use App\Entity\Profil;
 use App\Entity\User;
+use App\Entity\Profil;
+use App\Entity\Structure;
 use App\Mapping\UserMapping;
 use App\Service\BaseService;
 use App\Service\ConnectedUserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserManager extends BaseManager
 {
     private $userMapping;
     private $historiqueActionMapping;
     private $tokenStorage;
-    public function __construct(TokenStorageInterface $tokenStorage,UserMapping $userMapping,BaseService $baseService, \Swift_Mailer $mailer, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em)
+    public function __construct(TokenStorageInterface $tokenStorage,UserMapping $userMapping,BaseService $baseService, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em)
     {
-        parent::__construct($baseService, $mailer, $serializer, $validator, $em);
+       //parent::__construct($baseService, $serializer, $validator, $em);
         $this->userMapping=$userMapping;
+        $this->em=$em;
+        $this->baseService=$baseService;
+        $this->validator=$validator;
+        $this->serializer=$serializer;
         $this->tokenStorage=$tokenStorage;
     }
 
     public function addUser($userData)
     {
         $userData['profile'] = isset($userData['profilId']) ?$this->em->getRepository(Profil::class)->find($userData['profilId']): null;
+        $userData['structure'] = isset($userData['structureId']) ?$this->em->getRepository(Structure::class)->find($userData['structureId']): null;
         $allDataUser=$this->userMapping->createUser($userData);
         $user = $allDataUser['user'];
         $userData['profile']?$user->addRole("ROLE_". $userData['profile']->getLibelle()):'';
+        $userData['structure']?$user->setStructure($userData['structure']):'';
         $errors = $this->validator->validate($user);
         if ($errors->count()>0){
             $err = json_decode( $this->serializer->serialize($errors, 'json'),true);
             return array("code"=>500,"status"=>false,"message"=>$err['detail']);
         }
         $this->em->persist($user);
-        /* $data = array(
+         $data = array(
             'to' => $user->getEmail(),
-            'cc'=>array('mamekhady.diakhate@orange-sonatel.com','genevievesébiasylvie.mendy@orange-sonatel.com'),
             'subject' => 'Données de connexion à la plateforme suivi des activités et road map',
             'body' => 'Bonjour '.$user->getPrenom().' '.$user->getNom().',
             <br><br>Merci de recevoir vos données d\'autentification à la plateforme suivi des activités et road map qui vous permettront de vous connecter !'. '<br>
-            <strong>Email: </strong>' . $user->getEmail() . ' <br><strong>Password: </strong>' .  $allDataUser['password'].'<br><br><br><strong>Cordialement !</strong>'
+            <strong>Username: </strong>' . $user->getUsername() . ' <br><strong>Password: </strong>' .  $allDataUser['password'].'<br><br><br><strong>Cordialement !</strong>'
         );
-        $this->baseService->sendMail($data);*/
+        $this->baseService->sendMail($data);
         $this->em->flush();
         return array($this->SUCCESS_KEY => true, $this->CODE_KEY => 201,  $this->MESSAGE_KEY => 'Utilisateur créé avec succes!');
     }

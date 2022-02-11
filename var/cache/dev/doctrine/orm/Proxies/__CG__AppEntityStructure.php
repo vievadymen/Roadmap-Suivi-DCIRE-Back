@@ -66,10 +66,10 @@ class Structure extends \App\Entity\Structure implements \Doctrine\ORM\Proxy\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'color'];
+            return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'color', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'semaine', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'difficulte'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'color'];
+        return ['__isInitialized__', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'id', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'libelle', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'extraction', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeStructure', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'activite', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'evenement', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'typeServices', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'users', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'color', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'semaine', '' . "\0" . 'App\\Entity\\Structure' . "\0" . 'difficulte'];
     }
 
     /**
@@ -409,6 +409,61 @@ class Structure extends \App\Entity\Structure implements \Doctrine\ORM\Proxy\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setColor', [$color]);
 
         return parent::setColor($color);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSemaine(): ?int
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSemaine', []);
+
+        return parent::getSemaine();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSemaine(?int $semaine): \App\Entity\Structure
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSemaine', [$semaine]);
+
+        return parent::setSemaine($semaine);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDifficulte(): \Doctrine\Common\Collections\Collection
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDifficulte', []);
+
+        return parent::getDifficulte();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addDifficulte(\App\Entity\Difficulte $difficulte): \App\Entity\Structure
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addDifficulte', [$difficulte]);
+
+        return parent::addDifficulte($difficulte);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeDifficulte(\App\Entity\Difficulte $difficulte): \App\Entity\Structure
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeDifficulte', [$difficulte]);
+
+        return parent::removeDifficulte($difficulte);
     }
 
 }

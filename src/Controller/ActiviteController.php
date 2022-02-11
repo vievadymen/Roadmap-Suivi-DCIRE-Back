@@ -15,16 +15,13 @@ use App\Entity\Difficulte;
 use App\Entity\Periodicite;
 use App\Annotation\QMLogger;
 use App\Service\BaseService;
-use App\Entity\TrancheHoraire;
 use FOS\UserBundle\Mailer\Mailer;
 use App\Controller\BaseController;
 use App\Repository\UserRepository;
-use App\Entity\PointDeCoordination;
 use App\Repository\ActiviteRepository;
 use App\Repository\StructureRepository;
 use App\Repository\TypeServiceRepository;
 use App\Repository\TrancheHoraireRepository;
-use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -38,6 +35,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+
+
 class ActiviteController extends BaseController
 {
     private ActiviteRepository $activiteRepo;
@@ -47,7 +46,7 @@ class ActiviteController extends BaseController
     private SerializerInterface $serializer;
     private BaseService $baseService;
 
-    public function __construct(ActiviteRepository $activiteRepo  ,BaseService $baseService,UserRepository $userRepo ,
+    public function __construct (ActiviteRepository $activiteRepo  ,BaseService $baseService,UserRepository $userRepo ,
                 StructureRepository $structureRepo ,TrancheHoraireRepository $trancheHoraireRepo,TypeServiceRepository $serviceRepository)
     {
         $this->activiteRepo = $activiteRepo;
@@ -78,9 +77,9 @@ class ActiviteController extends BaseController
    // $user= $this->userRepo->find($request->get('user'));
     $user = $this->getUser();
     $structure= $user->getStructure();
-    $date= ($request->request->get('date'));
+    $date= $activite->getdate();
     $activite->setLibelle($request->request->get('libelle'));
-    $activite->setDate(new \DateTime($date));
+   // $activite->setDate(new \DateTime($date));
     $semaine= $this->baseService->Date2Semaine($date);
     $activite->setSemaine($semaine);
         $activite->setUser($user);
@@ -88,19 +87,29 @@ class ActiviteController extends BaseController
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($activite);
+       
         $entityManager->flush();
         return new JsonResponse("succes",Response::HTTP_CREATED,[],true);
-       /* $message=(new\Swift_Message)
-        ->setSubject('DCIRE, PILOTAGE PERFORMANCE')
-        ->setFrom('xxxxx@orange-sonatel.com')
-        ->setTo('ddiatou1@gmail.com')
-        ->setBody("Votre activité est enregistré avec succé");
-    $mailer->send($message);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($region);
-        $entityManager->flush();
-     ;*/
       
+    }
+
+      /**
+     * @Get("/api/activite-mail", name="activite-mail")
+     */
+    public function sendworkflow()
+    {
+       
+        $user= $this->getUser();
+        $data = array(
+            'to'=>$user->getEmail(),
+            'cc'=>('ddiatou1@gmail.com'),
+            'subject'=>'La Plateforme Suivi des Activités et de la Roadmap',
+            'body'=>'Bonjour ' .$user->getPrenom() .''. $user->getNom().',
+            <br><br>Merci d\'avoir renseigné le Suivi d\'activité de la semaine'. '<br>'
+
+        );
+        $this->baseService->sendMail($data);
+        return $this->json(['status'=>200, "message"=>"email envoyé avec succées"]);
     }
 
     /**
@@ -223,18 +232,19 @@ class ActiviteController extends BaseController
         
         $activite = $this->activiteRepo->find($id);
         
-        //$user= $this->userRepo->find($request->get('user'));
-       $user = $this->getUser();
-       $structure= $user->getStructure();
-        $date_prime = ($request->request->get('date'));
-        $activite->setDate(new \DateTime($date_prime));
-       // $activite->setUser($user);
-       // $activite->setStructure($structure);
-        $activite->setLibelle($request->request->get('libelle'));
-            
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($activite);
-            $entityManager->flush();
+        $user = $this->getUser();
+    $structure= $user->getStructure();
+    $date= $activite->getdate();
+    $activite->setLibelle($request->request->get('libelle'));
+   // $activite->setDate(new \DateTime($date));
+    $semaine= $this->baseService->Date2Semaine($date);
+    $activite->setSemaine($semaine);
+        $activite->setUser($user);
+        $activite->setStructure($structure);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($activite);
+        $entityManager->flush();
         
         return $this->json(['status'=>200, "message"=>"activite modifie avec succes"]);
     }

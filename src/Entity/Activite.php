@@ -20,7 +20,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ActiviteRepository::class)
- * @UniqueEntity("libelle")
  */
 class Activite
 {
@@ -81,8 +80,7 @@ class Activite
 
     /**
      * @ORM\Column(type="date")
-     *  @var string A "Y-m-d" formatted value
-     * @Groups({"activite:read"})
+     * @Groups({"activite:read","structure:activite"})
      * @Notblank
      */
     private $date;
@@ -94,7 +92,7 @@ class Activite
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"activite:read"})
+     * @Groups({"activite:read","structure:activite"})
      */
     private $semaine;
 

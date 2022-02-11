@@ -18,11 +18,11 @@ class ProfilManager extends BaseManager
 {
     private $profilMapping;
     private $profilRepository;
-    public function __construct(ProfilRepository $profilRepository,ProfilMapping $profilMapping,BaseService $baseService, \Swift_Mailer $mailer, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em)
+    public function __construct(ProfilRepository $profilRepository,ProfilMapping $profilMapping,BaseService $baseService, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em)
     {
         $this->profilRepository = $profilRepository;
         $this->profilMapping = $profilMapping;
-        parent::__construct($baseService, $mailer, $serializer, $validator, $em);
+      //  parent::__construct($baseService, $mailer, $serializer, $validator, $em);
     }
 
     public function addprofil($data)

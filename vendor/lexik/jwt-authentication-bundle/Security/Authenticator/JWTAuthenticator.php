@@ -38,6 +38,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
+    use ForwardCompatAuthenticatorTrait;
+
     /**
      * @var TokenExtractorInterface
      */
@@ -88,7 +90,10 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         return false !== $this->getTokenExtractor()->extract($request);
     }
 
-    public function authenticate(Request $request): PassportInterface
+    /**
+     * @return Passport
+     */
+    public function doAuthenticate(Request $request) /*: Passport */
     {
         $token = $this->getTokenExtractor()->extract($request);
 
@@ -117,6 +122,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
         );
 
         $passport->setAttribute('payload', $payload);
+        $passport->setAttribute('token', $token);
 
         return $passport;
     }
@@ -201,9 +207,9 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
                 try {
                     if ($provider instanceof PayloadAwareUserProviderInterface) {
                         if (method_exists(PayloadAwareUserProviderInterface::class, 'loadUserByIdentifierAndPayload')) {
-                            return $this->userProvider->loadUserByIdentifierAndPayload($identity, $payload);
+                            return $provider->loadUserByIdentifierAndPayload($identity, $payload);
                         } else {
-                            return $this->userProvider->loadUserByUsernameAndPayload($identity, $payload);
+                            return $provider->loadUserByUsernameAndPayload($identity, $payload);
                         }
                     }
 
@@ -234,11 +240,11 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
 
     public function createAuthenticatedToken(PassportInterface $passport, string $firewallName): TokenInterface
     {
-        $token = parent::createAuthenticatedToken($passport, $firewallName);
-
-        if (!$passport instanceof SelfValidatingPassport) {
-            throw new \LogicException(sprintf('Expected "%s" but got "%s".', SelfValidatingPassport::class, get_debug_type($passport)));
+        if (!$passport instanceof Passport) {
+            throw new \LogicException(sprintf('Expected "%s" but got "%s".', Passport::class, get_debug_type($passport)));
         }
+
+        $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
 
         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
 
@@ -247,7 +253,7 @@ class JWTAuthenticator extends AbstractAuthenticator implements AuthenticationEn
 
     public function createToken(Passport $passport, string $firewallName): TokenInterface
     {
-        $token = parent::createToken($passport, $firewallName);
+        $token = new JWTPostAuthenticationToken($passport->getUser(), $firewallName, $passport->getUser()->getRoles(), $passport->getAttribute('token'));
 
         $this->eventDispatcher->dispatch(new JWTAuthenticatedEvent($passport->getAttribute('payload'), $token), Events::JWT_AUTHENTICATED);
 

@@ -16,6 +16,8 @@ return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\
             'groups' => [
                 1 => [
                     'evenement:read',
+                    'structure:mois',
+                    'evenement:extraction',
                     'structure:event',
                     'structure:show',
                     'evenement:detail',

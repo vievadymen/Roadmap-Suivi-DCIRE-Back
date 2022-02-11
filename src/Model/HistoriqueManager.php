@@ -16,11 +16,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class HistoriqueManager extends BaseManager{
     private $tokenStorage;
     private $historiqueMapping;
-    public function __construct(HistoriqueMapping $historiqueMapping,TokenStorageInterface $tokenStorage,BaseService $baseService, \Swift_Mailer $mailer, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em)
+    public function __construct(HistoriqueMapping $historiqueMapping,TokenStorageInterface $tokenStorage,BaseService $baseService, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em)
     {
         $this->tokenStorage=$tokenStorage;
         $this->historiqueMapping=$historiqueMapping;
-        parent::__construct($baseService, $mailer, $serializer, $validator, $em);
+       // parent::__construct($baseService, $mailer, $serializer, $validator, $em);
     }
     public function addHistorique($data){
         $historique=new historique();

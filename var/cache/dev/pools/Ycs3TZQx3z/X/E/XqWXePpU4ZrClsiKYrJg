@@ -2,13 +2,21 @@
 
 return [PHP_INT_MAX, static function () { return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
     $o = [
-        clone (\Symfony\Component\VarExporter\Internal\Registry::$prototypes['Symfony\\Component\\Routing\\Annotation\\Route'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Routing\\Annotation\\Route')),
+        clone (\Symfony\Component\VarExporter\Internal\Registry::$prototypes['FOS\\RestBundle\\Controller\\Annotations\\Get'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('FOS\\RestBundle\\Controller\\Annotations\\Get')),
     ],
     null,
     [
         'Symfony\\Component\\Routing\\Annotation\\Route' => [
             'path' => [
-                '/workflow',
+                '/api/workflow',
+            ],
+            'name' => [
+                'workflow',
+            ],
+            'methods' => [
+                [
+                    'GET',
+                ],
             ],
         ],
     ],

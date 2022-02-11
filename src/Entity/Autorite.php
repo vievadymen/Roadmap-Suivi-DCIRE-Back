@@ -26,7 +26,7 @@ class Autorite
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"autorite:read","structure:show"})
+     * @Groups({"autorite:read", "evenement:extraction","structure:show"})
      */
     private $fonction;
 

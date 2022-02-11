@@ -87,27 +87,43 @@ class EvenementController extends BaseController
         $entityManager->flush();
      */
     $user = $this->getUser();
-    $structure= $user->getStructure();
-    $start = ($request->request->get('start'));
-    $end = ($request->request->get('end'));
-    //$autorite=$this->autoriteRepo->find($request->get('autorite'));
-    //$evenement->setAutorite($autorite);
-    $evenement->setThematique($request->request->get('thematique'));
-    $evenement->setAutorite($request->request->get('autorite'));
-    $evenement->setStart(new \DateTime($start));
-    $evenement->setEnd(new \DateTime($end));
-    $semaine= $this->baseService->Date2Semaine($start);
-    $evenement->setSemaine($semaine);
-    $evenement->setStructure($structure);
-   // $structure= $this->structureRepo->find($request->get('structure'));
-        $evenement->setUser($user);
-       // $evenement->setStructure($structure);
+    $structure = $user->getStructure();
+    $dateDebut = $evenement->getStart();
+    $mois= $evenement->getMois();
+    $evenement->setThematique($request->request->get('thematique'));  
+   // $evenement->addAutorite($request->request->get('autorite')); 
 
+    $semaine= $this->baseService->Date2Semaine($dateDebut);
+    $mois= $this->baseService->Date2mois($dateDebut);
+    $evenement->setSemaine($semaine);
+    $evenement->setMois($mois);
+        $evenement->setUser($user);
+        $evenement->setStructure($structure);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($evenement);
+       
         $entityManager->flush();
-        return new JsonResponse("succes",Response::HTTP_CREATED,[],true);
+        return $this->json($evenement, 200, [], ['groups' => 'evenement:detail']);
       
+    }
+
+
+      /**
+     * @Get("/api/evenement-mail", name="evenement-mail")
+     */
+    public function sendworkflow()
+    {
+       
+        $user= $this->getUser();
+        $data = array(
+            'to' => $user->getEmail(),
+            'cc' => 'ddiatou1@gmail.com',
+            'subject' => 'Données de connexion à la plateforme Suivi des Activités et de la Roadmap',
+            'body' => 'Bonjour '.$user->getPrenom() .' '.$user->getNom().',
+            <br><br>Merci d\'avoir renseigner la Roadmap '. '<br>'
+        );
+        $this->baseService->sendMail($data);
+        return $this->json(['status'=>200, "message"=>"email envoyé avec succées"]);
     }
 
     /**
@@ -121,6 +137,18 @@ class EvenementController extends BaseController
 
         return $response; 
     }
+    /**
+     * @Get("/api/evenement/extraction", name="evenement-extraction")
+     */
+    public function ExtractionEvenement(): Response
+    {
+        
+        $evenements = $this->evenementRepo->findAll();
+        $response = $this->json($evenements, 200, [], ['groups' => 'evenement:extraction']);
+
+        return $response; 
+    }
+    
       /**
      * @Get("/api/evenement/{id}")
      * @QMLogger(message="Details evenement")
@@ -161,21 +189,30 @@ class EvenementController extends BaseController
     {
         $evenement = $this->evenementRepo->find($id);
         $user = $this->getUser();
-    $structure= $user->getStructure();
+       //$structure= $user->getStructure();
     $start = ($request->request->get('start'));
-    $evenement->setThematique($request->request->get('thematique'));
-    $semaine= $this->baseService->Date2Semaine($start);
-    $evenement->setSemaine($semaine);
-    $evenement->setStructure($structure);
-   // $structure= $this->structureRepo->find($request->get('structure'));
+   // dd($start);
+    $end = ($request->request->get('end'));
+    $evenement->setEnd( new \DateTime($end));
+    $evenement->setLieu($request->request->get('lieu'));
+    $evenement->setAutorite($request->request->get('autorite'));
+
+        $evenement->setStart( new \DateTime($start));
+        $semaine= $this->baseService->Date2Semaine($start);
+        $evenement->setSemaine($semaine);
+        $evenement->setThematique($request->request->get('thematique'));
         $evenement->setUser($user);
-       // $evenement->setStructure($structure);
+        //$evenement->setStructure($structure);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($evenement);
+        
         $entityManager->flush();
 
         return $this->json(['status'=>200, "message"=>"Evenement modifie avec succes"]);
+
+
+    
 
 }
 
@@ -204,6 +241,16 @@ class EvenementController extends BaseController
     $event = $this->evenementRepo->findBy(["semaine"=>$semaine]);
     return $this->json($event, 200, [], ['groups' => 'evenement:detail']);
 }
+
+    /**
+     * @Get("/api/mois/evenement/{mois}", name="mois-evenement")
+     */
+    public function MoisEvenement ($mois)
+    {
+    $user = $this->getUser()->getId();
+    $event = $this->evenementRepo->Mois($mois);
+    return $this->json($event, 200, [], ['groups' => 'evenement:read']);
+    }
 
 }
 

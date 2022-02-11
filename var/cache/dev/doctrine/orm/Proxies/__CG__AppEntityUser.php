@@ -66,10 +66,10 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentative', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentativeAt', '' . "\0" . 'App\\Entity\\User' . "\0" . 'nom', 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'prenom', '' . "\0" . 'App\\Entity\\User' . "\0" . 'matricule', '' . "\0" . 'App\\Entity\\User' . "\0" . 'service', '' . "\0" . 'App\\Entity\\User' . "\0" . 'profil', '' . "\0" . 'App\\Entity\\User' . "\0" . 'workflow', '' . "\0" . 'App\\Entity\\User' . "\0" . 'activites', '' . "\0" . 'App\\Entity\\User' . "\0" . 'adminPP', '' . "\0" . 'App\\Entity\\User' . "\0" . 'evenements', '' . "\0" . 'App\\Entity\\User' . "\0" . 'typeService', '' . "\0" . 'App\\Entity\\User' . "\0" . 'structure', 'username', 'usernameCanonical', 'email', 'emailCanonical', 'enabled', 'salt', 'plainPassword', 'lastLogin', 'confirmationToken', 'passwordRequestedAt', 'groups'];
+            return ['__isInitialized__', 'id', 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentative', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentativeAt', '' . "\0" . 'App\\Entity\\User' . "\0" . 'nom', 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'prenom', '' . "\0" . 'App\\Entity\\User' . "\0" . 'matricule', '' . "\0" . 'App\\Entity\\User' . "\0" . 'service', '' . "\0" . 'App\\Entity\\User' . "\0" . 'profil', '' . "\0" . 'App\\Entity\\User' . "\0" . 'workflow', '' . "\0" . 'App\\Entity\\User' . "\0" . 'activites', '' . "\0" . 'App\\Entity\\User' . "\0" . 'adminPP', '' . "\0" . 'App\\Entity\\User' . "\0" . 'evenements', '' . "\0" . 'App\\Entity\\User' . "\0" . 'typeService', '' . "\0" . 'App\\Entity\\User' . "\0" . 'structure', '' . "\0" . 'App\\Entity\\User' . "\0" . 'status', '' . "\0" . 'App\\Entity\\User' . "\0" . 'difficulte', 'username', 'usernameCanonical', 'email', 'emailCanonical', 'enabled', 'salt', 'plainPassword', 'lastLogin', 'confirmationToken', 'passwordRequestedAt', 'groups'];
         }
 
-        return ['__isInitialized__', 'id', 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentative', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentativeAt', '' . "\0" . 'App\\Entity\\User' . "\0" . 'nom', 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'prenom', '' . "\0" . 'App\\Entity\\User' . "\0" . 'matricule', '' . "\0" . 'App\\Entity\\User' . "\0" . 'service', '' . "\0" . 'App\\Entity\\User' . "\0" . 'profil', '' . "\0" . 'App\\Entity\\User' . "\0" . 'workflow', '' . "\0" . 'App\\Entity\\User' . "\0" . 'activites', '' . "\0" . 'App\\Entity\\User' . "\0" . 'adminPP', '' . "\0" . 'App\\Entity\\User' . "\0" . 'evenements', '' . "\0" . 'App\\Entity\\User' . "\0" . 'typeService', '' . "\0" . 'App\\Entity\\User' . "\0" . 'structure', 'username', 'usernameCanonical', 'email', 'emailCanonical', 'enabled', 'salt', 'plainPassword', 'lastLogin', 'confirmationToken', 'passwordRequestedAt', 'groups'];
+        return ['__isInitialized__', 'id', 'password', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentative', '' . "\0" . 'App\\Entity\\User' . "\0" . 'loginTentativeAt', '' . "\0" . 'App\\Entity\\User' . "\0" . 'nom', 'roles', '' . "\0" . 'App\\Entity\\User' . "\0" . 'prenom', '' . "\0" . 'App\\Entity\\User' . "\0" . 'matricule', '' . "\0" . 'App\\Entity\\User' . "\0" . 'service', '' . "\0" . 'App\\Entity\\User' . "\0" . 'profil', '' . "\0" . 'App\\Entity\\User' . "\0" . 'workflow', '' . "\0" . 'App\\Entity\\User' . "\0" . 'activites', '' . "\0" . 'App\\Entity\\User' . "\0" . 'adminPP', '' . "\0" . 'App\\Entity\\User' . "\0" . 'evenements', '' . "\0" . 'App\\Entity\\User' . "\0" . 'typeService', '' . "\0" . 'App\\Entity\\User' . "\0" . 'structure', '' . "\0" . 'App\\Entity\\User' . "\0" . 'status', '' . "\0" . 'App\\Entity\\User' . "\0" . 'difficulte', 'username', 'usernameCanonical', 'email', 'emailCanonical', 'enabled', 'salt', 'plainPassword', 'lastLogin', 'confirmationToken', 'passwordRequestedAt', 'groups'];
     }
 
     /**
@@ -541,6 +541,61 @@ class User extends \App\Entity\User implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setStructure', [$structure]);
 
         return parent::setStructure($structure);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStatus(): ?bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getStatus', []);
+
+        return parent::getStatus();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setStatus(?bool $status): \App\Entity\User
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setStatus', [$status]);
+
+        return parent::setStatus($status);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDifficulte(): \Doctrine\Common\Collections\Collection
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getDifficulte', []);
+
+        return parent::getDifficulte();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addDifficulte(\App\Entity\Difficulte $difficulte): \App\Entity\User
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addDifficulte', [$difficulte]);
+
+        return parent::addDifficulte($difficulte);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function removeDifficulte(\App\Entity\Difficulte $difficulte): \App\Entity\User
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removeDifficulte', [$difficulte]);
+
+        return parent::removeDifficulte($difficulte);
     }
 
     /**

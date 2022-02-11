@@ -71,12 +71,12 @@ class  BaseMapping {
     protected $mailer;
     protected $baseService;
     protected $em;
-    public function __construct(\Swift_Mailer $mailer,BaseService $baseService,EntityManagerInterface $em,ValidatorInterface $validator,SerializerInterface $serializer,UserPasswordEncoderInterface $encoder)
+    public function __construct(BaseService $baseService,EntityManagerInterface $em,ValidatorInterface $validator,SerializerInterface $serializer,UserPasswordEncoderInterface $encoder)
     {
         $this->validator=$validator;
         $this->serializer=$serializer;
         $this->encoder=$encoder;
-        $this->mailer=$mailer;
+       // $this->mailer=$mailer;
         $this->baseService = $baseService;
         $this->em =$em;
     }

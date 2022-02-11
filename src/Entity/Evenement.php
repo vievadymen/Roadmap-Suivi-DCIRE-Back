@@ -27,13 +27,13 @@ class Evenement
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"commentaire:read", "evenement:read"})
+     * @Groups({"commentaire:read", "evenement:read" ,"evenement:detail"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text" )
-     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
+     * @Groups({"evenement:read" ,"structure:mois", "evenement:extraction", "structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
      * 
      */
     private $thematique;
@@ -41,20 +41,19 @@ class Evenement
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true )
-     * @Groups({"commentaire:read" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"commentaire:read" , "evenement:read" ,"evenement:detail"})
      */
     private $etat;
 
     /**
      * @ORM\ManyToOne(targetEntity=Structure::class, inversedBy="evenement", cascade={"persist"})
-     * @Groups({"commentaire:read" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"commentaire:read" , "evenement:extraction" ,"evenement:read" ,"evenement:detail"})
      */
     private $structure;
 
     /**
      * @ORM\OneToMany(targetEntity=commentaire::class, mappedBy="evenement", cascade={"persist"} )
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"commentaire:read" ,"evenement:read" ,"evenement:detail"})
      */
     private $commentaire;
 
@@ -78,14 +77,14 @@ class Evenement
  
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
+     * @Groups({"evenement:read", "structure:mois", "evenement:extraction" ,"structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
      * @Notblank
      */
     private $start;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
+     * @Groups({"evenement:read" ,"structure:mois", "evenement:extraction","structure:event" ,"structure:show" ,"evenement:detail" ,"autorite:read"})
      */
     private $end;
 
@@ -98,22 +97,28 @@ class Evenement
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"commentaire:read" ,"structure:event" ,"evenement:read" ,"evenement:detail"})
+     * @Groups({"commentaire:read" ,"structure:mois", "evenement:extraction","structure:event" ,"evenement:read" ,"evenement:detail"})
      */
     private $confirmation;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail"})
-
+     * @Groups({"evenement:read", "structure:mois", "evenement:extraction" ,"structure:event" ,"structure:show" ,"evenement:detail"})
+     * 
      */
     private $autorite;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"evenement:read" ,"structure:event" ,"structure:show" ,"evenement:detail"})
+     * @Groups({"evenement:read", "structure:mois", "evenement:extraction" ,"structure:event" ,"structure:show" ,"evenement:detail"})
      */
     private $lieu;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Groups({"commentaire:read" ,"structure:event" ,"evenement:read" ,"evenement:detail"})
+     */
+    private $mois;
 
     public function __construct()
     {
@@ -325,6 +330,18 @@ class Evenement
     public function setLieu(?string $lieu): self
     {
         $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getMois(): ?int
+    {
+        return $this->mois;
+    }
+
+    public function setMois(int $mois): self
+    {
+        $this->mois = $mois;
 
         return $this;
     }

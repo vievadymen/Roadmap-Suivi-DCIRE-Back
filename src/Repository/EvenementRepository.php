@@ -47,6 +47,17 @@ class EvenementRepository extends ServiceEntityRepository
         ;
     }
 
+    public function Mois($mois)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.mois = :mois')
+            ->setParameter('mois', $mois)
+            ->getQuery()
+            ->getResult()
+            
+        ;
+    }
+
     /*
     public function findOneBySomeField($value): ?Evenement
     {

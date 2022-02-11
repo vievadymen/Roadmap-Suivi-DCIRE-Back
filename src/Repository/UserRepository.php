@@ -71,7 +71,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function listEmailUsers(){
         return $this->createQueryBuilder('u')
-            ->select('u.id,u.email')
+            ->select('u.email')
             ->getQuery()
             ->getResult();
     }

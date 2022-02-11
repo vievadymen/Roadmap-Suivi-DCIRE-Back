@@ -14,10 +14,10 @@ return [[
 'FOS.UserBundle.Model.User' => 7,
 'FOS.UserBundle.Model.UserInterface' => 8,
 'FOS.UserBundle.Model.GroupableInterface' => 9,
-'Symfony.Component.Security.Core.User.UserInterface' => 10,
-'Serializable' => 11,
-'Symfony.Component.Security.Core.User.AdvancedUserInterface' => 12,
-'FOS.UserBundle.Model.FosUserInterface' => 13,
+'Symfony.Component.Security.Core.User.AdvancedUserInterface' => 10,
+'Symfony.Component.Security.Core.User.UserInterface' => 11,
+'Serializable' => 12,
+'FOS.UserBundle.Model.CompatUserInterface' => 13,
 'FOS.UserBundle.Model.Group' => 14,
 'FOS.UserBundle.Model.GroupInterface' => 15,
 
@@ -453,10 +453,10 @@ return [[
         [
             'stdClass' => [
                 'name' => [
-                    'Symfony\\Component\\Security\\Core\\User\\UserInterface',
+                    'Symfony\\Component\\Security\\Core\\User\\AdvancedUserInterface',
                 ],
                 'defaultGroup' => [
-                    'UserInterface',
+                    'AdvancedUserInterface',
                 ],
             ],
         ],
@@ -473,10 +473,10 @@ return [[
         [
             'stdClass' => [
                 'name' => [
-                    'Serializable',
+                    'Symfony\\Component\\Security\\Core\\User\\UserInterface',
                 ],
                 'defaultGroup' => [
-                    'Serializable',
+                    'UserInterface',
                 ],
             ],
         ],
@@ -493,10 +493,10 @@ return [[
         [
             'stdClass' => [
                 'name' => [
-                    'Symfony\\Component\\Security\\Core\\User\\AdvancedUserInterface',
+                    'Serializable',
                 ],
                 'defaultGroup' => [
-                    'AdvancedUserInterface',
+                    'Serializable',
                 ],
             ],
         ],
@@ -513,10 +513,10 @@ return [[
         [
             'stdClass' => [
                 'name' => [
-                    'FOS\\UserBundle\\Model\\FosUserInterface',
+                    'FOS\\UserBundle\\Model\\CompatUserInterface',
                 ],
                 'defaultGroup' => [
-                    'FosUserInterface',
+                    'CompatUserInterface',
                 ],
             ],
         ],

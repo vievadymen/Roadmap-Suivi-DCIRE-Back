@@ -24,12 +24,12 @@ class BaseController  extends FOSRestController implements ClassResourceInterfac
     protected $validator;
     protected $tokenStorage;
     protected $mailer;
-    public function __construct(JWTTokenManagerInterface $jwtManager,\Swift_Mailer $mailer,TokenStorageInterface $tokenStorage,EntityManagerInterface $em,ValidatorInterface $validator)
+    public function __construct(JWTTokenManagerInterface $jwtManager,TokenStorageInterface $tokenStorage,EntityManagerInterface $em,ValidatorInterface $validator)
     {
         $this->jwtM = $jwtManager;
         $this->tokenStorage=$tokenStorage;
         $this->validator=$validator;
-        $this->mailer=$mailer;
+        //$this->mailer=$mailer;
         $this->em=$em;
     }
     public function sendMail($user,$bcc){

@@ -21,10 +21,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ProfilController extends BaseController
 {
     private $profilManager;
-    public function __construct(ProfilManager $profilManager,JWTTokenManagerInterface $jwtManager, \Swift_Mailer $mailer, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, ValidatorInterface $validator)
+    public function __construct(ProfilManager $profilManager,JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, ValidatorInterface $validator)
     {
         $this->profilManager=$profilManager;
-        parent::__construct($jwtManager, $mailer, $tokenStorage, $em, $validator);
+       // parent::__construct($jwtManager, $mailer, $tokenStorage, $em, $validator);
     }
 
     /**
@@ -37,7 +37,7 @@ class ProfilController extends BaseController
     }
 
     /**
-     * @Rest\Get("/profils")
+     * @Get("/api/profils",name="profils")
      * @QMLogger(message="Liste profil")
      */
     public function listProfil(){

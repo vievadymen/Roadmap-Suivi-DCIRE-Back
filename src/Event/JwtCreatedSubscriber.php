@@ -27,8 +27,13 @@ class JwtCreatedSubscriber
         $data = $event->getData();
         $res = $this->user->findBy(['username'=>$data['username']]);
         $data['nom'] =$res[0]->getPrenom().' '.$res[0]->getNom();
+        $data['status'] =$res[0]->getStatus();
+        $data['email'] = $res[0]->getEmail();
+        $data['username'] = $res[0]->getUsername();
+
+
         $data['id'] =  $res[0]->getId();
-       // $data['structure'] =  $res[0]->getStructure()->getId();
+        $data['structure'] =  $res[0]->getStructure()->getLibelle();
 
         $event->setData($data);
     }

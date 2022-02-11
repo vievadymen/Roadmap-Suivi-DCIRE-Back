@@ -157,5 +157,5 @@
   'FOSUserBundle:Resetting:reset.html.twig' => __DIR__.'/../../../vendor/friendsofsymfony/user-bundle/Resources/views/Resetting/reset.html.twig',
   'FOSUserBundle:Resetting:request_content.html.twig' => __DIR__.'/../../../vendor/friendsofsymfony/user-bundle/Resources/views/Resetting/request_content.html.twig',
   'FOSUserBundle:Resetting:check_email.html.twig' => __DIR__.'/../../../vendor/friendsofsymfony/user-bundle/Resources/views/Resetting/check_email.html.twig',
-  'SwiftmailerBundle:Collector:swiftmailer.html.twig' => __DIR__.'/../../../vendor/symfony/swiftmailer-bundle/Resources/views/Collector/swiftmailer.html.twig',
+  'Egyg33kCsvBundle:Default:index.html.twig' => __DIR__.'/../../../vendor/egyg33k/csv-bundle/Resources/views/Default/index.html.twig',
 );

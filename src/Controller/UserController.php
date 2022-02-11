@@ -29,11 +29,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UserController extends BaseController {
     private $userManager;
     private $userRepository;
-public function __construct(UserRepository $userRepository,UserManager $userManager,JWTTokenManagerInterface $jwtManager, \Swift_Mailer $mailer, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, \ApiPlatform\Core\Validator\ValidatorInterface $validator)
+public function __construct(UserRepository $userRepository,UserManager $userManager,JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage, EntityManagerInterface $em, \ApiPlatform\Core\Validator\ValidatorInterface $validator)
 {
     $this->userManager=$userManager;
     $this->userRepository=$userRepository;
-    parent::__construct($jwtManager, $mailer, $tokenStorage, $em, $validator);
+    //parent::__construct($jwtManager, $mailer, $tokenStorage, $em, $validator);
 }
 
     /**
@@ -118,13 +118,13 @@ public function __construct(UserRepository $userRepository,UserManager $userMana
         return new JsonResponse($this->userManager->addUser($data));
     }
     /**
-     * @Rest\Get("/user/{id}")
+     * @Rest\Get("/api/user/{id}")
      * @QMLogger(message="Details utilisateur")
      */
     public function detailsUser($id){
         $users = $this->userRepository->find($id);
-        return new JsonResponse($this->userManager->detailsUser($id));
-        $response = $this->json($users, 200, [], ['groups' => 'user:read']);
+
+        return $this->json($users, 200, [], ['groups' => 'user:read']);
     }
 
     /**
@@ -152,12 +152,15 @@ public function __construct(UserRepository $userRepository,UserManager $userMana
 
 
     /**
-     * @Rest\Post("/blockUser/{id}")
+     * @Rest\Post("/api/blockUser/{id}")
      * @QMLogger(message="Bloquer utilisateur")
      */
-    public function bloquerUtilisateur(Request $request,$id){
-        $data=json_decode($request->getContent(),true);
-        return new JsonResponse($this->userManager->enabledUser($data,$id));
+    public function bloquerUtilisateur(Request $request,UserRepository $userRepository,$id){
+        $user = $userRepository->find((int)$id);
+        $user->setStatus(false);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+        return new JsonResponse(true);
     }
 
     /**

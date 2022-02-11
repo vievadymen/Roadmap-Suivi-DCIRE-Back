@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use App\Entity\Activite;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DifficulteRepository;
@@ -19,13 +20,13 @@ class Difficulte
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"difficulte:read"})
+     * @Groups({"difficulte:read", "difficulte:show", "structure:diff"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"structure:active", "difficulte:read"})
+     * @Groups({"structure:active", "difficulte:show" ,"structure:diff" , "difficulte:read"})
      * @Notblank
      */
     private $description;
@@ -39,8 +40,19 @@ class Difficulte
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"structure:diff" })
      */
     private $semaine;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Structure::class, inversedBy="difficulte")
+     */
+    private $structure;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="difficulte")
+     */
+    private $user;
 
 
 
@@ -86,6 +98,30 @@ class Difficulte
     public function setSemaine(int $semaine): self
     {
         $this->semaine = $semaine;
+
+        return $this;
+    }
+
+    public function getStructure(): ?Structure
+    {
+        return $this->structure;
+    }
+
+    public function setStructure(?Structure $structure): self
+    {
+        $this->structure = $structure;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

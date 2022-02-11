@@ -18,6 +18,52 @@ class StructureRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Structure::class);
     }
+    public function precede($semaine)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.semaine = :semaine')
+            ->setParameter('semaine', $semaine)
+            ->getQuery()
+            ->getResult()
+            
+        ;
+    }
+
+    public function goToWeek(int $structure, int $semaine):array{
+
+        $_em = $this->getEntityManager();
+        $query = $_em->createQuery('SELECT a FROM App\Entity\Activite a WHERE a.structure = :structure AND a.semaine = :semaine')->
+        setParameter("structure", $structure)->setParameter("semaine", $semaine);
+
+        return $query->getResult();
+    }
+
+    public function goToWeekEvent(int $structure, int $semaine):array{
+
+        $_em = $this->getEntityManager();
+        $query = $_em->createQuery('SELECT a FROM App\Entity\Evenement a WHERE a.structure = :structure AND a.semaine = :semaine')->
+        setParameter("structure", $structure)->setParameter("semaine", $semaine);
+
+        return $query->getResult();
+    }
+
+    public function goToMoisEvent(int $structure, int $mois):array{
+
+        $_em = $this->getEntityManager();
+        $query = $_em->createQuery('SELECT a FROM App\Entity\Evenement a WHERE a.structure = :structure AND a.mois = :mois')->
+        setParameter("structure", $structure)->setParameter("mois", $mois);
+
+        return $query->getResult();
+    }
+
+    public function goToWeekDiff(int $structure, int $semaine):array{
+
+        $_em = $this->getEntityManager();
+        $query = $_em->createQuery('SELECT a FROM App\Entity\Difficulte a WHERE a.structure = :structure AND a.semaine = :semaine')->
+        setParameter("structure", $structure)->setParameter("semaine", $semaine);
+
+        return $query->getResult();
+    }
 
     // /**
     //  * @return Structure[] Returns an array of Structure objects
